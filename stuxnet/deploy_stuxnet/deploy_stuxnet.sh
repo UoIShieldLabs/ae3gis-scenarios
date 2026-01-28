@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PLC_URL="172.16.101.10:8080"
+#PLC_URL="172.16.101.10:8080"
 PLC_URL=$1
 PLC_USERNAME="openplc"
 PLC_PASSWORD="openplc"
