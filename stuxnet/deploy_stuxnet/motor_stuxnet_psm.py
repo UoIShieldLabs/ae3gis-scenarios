@@ -100,7 +100,7 @@ def update_inputs():
 
     motor_running_true = psm.get_var("QX0.4")
     motor_rpm_true = psm.get_var("IW1")
-    print(f"WHY IS IT NOT ZERO: {psm.get_var("QW1")}")
+    print(f"{psm.get_var("QW1")}")
     target_freq_true = psm.get_var("QW1")
 
     update_rpm, current_freq = vfd_to_motor_rpm(vfd_freq_hz=target_freq, current_rpm=motor_rpm)

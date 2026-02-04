@@ -16,6 +16,13 @@ curl -c "$COOKIE_JAR" \
      -X POST "$PLC_URL/login" \
      -d "username=$PLC_USERNAME&password=$PLC_PASSWORD" > /dev/null
 
+# ======== # 
+# Stop PLC #
+# ======== #
+echo "Stop PLC..."
+curl -b "$COOKIE_JAR" \
+        -X GET "$PLC_URL/stop_plc" > /dev/null
+
 # =============== # 
 # Get Active File #
 # =============== #
@@ -57,16 +64,16 @@ curl -b "$COOKIE_JAR" \
 # ========= # 
 # Recompile #
 # ========= #
-# echo "Compile..."
-# curl -b "$COOKIE_JAR" \
-#      -X GET "$PLC_URL/compile-program?file=$MATCH_FILE" > /dev/null
+echo "Compile..."
+curl -b "$COOKIE_JAR" \
+     -X GET "$PLC_URL/compile-program?file=$MATCH_FILE" > /dev/null
 
-# COMPILE_LOGS=""
-# COMPILE_REGEX=".*Compilation finished"
-# while ! [[ "$COMPILE_LOGS" =~ $COMPILE_REGEX ]]; do
-#     COMPILE_LOGS=$(curl -s -b $COOKIE_JAR "http://$PLC_URL/compilation-logs")
-#     #echo $COMPILE_LOGS
-# done
+COMPILE_LOGS=""
+COMPILE_REGEX=".*Compilation finished"
+while ! [[ "$COMPILE_LOGS" =~ $COMPILE_REGEX ]]; do
+    COMPILE_LOGS=$(curl -s -b $COOKIE_JAR "http://$PLC_URL/compilation-logs")
+    #echo $COMPILE_LOGS
+done
 
 # echo "Start..."
 # curl -b "$COOKIE_JAR" \
