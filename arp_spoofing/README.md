@@ -13,7 +13,7 @@ You will:
 6. Mitigate the attack using static ARP entries
 7. Verify that the mitigation is effective
 
-> **Difficulty:** ⭐ Beginner  
+> **Difficulty:** Beginner  
 > **Estimated Time:** 45–60 minutes  
 > **Network Layer:** IT
 
@@ -161,7 +161,7 @@ On **each node**, open a terminal (via AE³GIS node console) and run:
 ip addr show eth0
 ```
 
-> **📋 Checkpoint:** Write down the IP address **and** MAC address of each node. You will need these throughout the lab.
+> **Checkpoint:** Write down the IP and MAC address of each node. You will need these throughout the lab.
 >
 > | Node | IP Address | MAC Address |
 > |------|-----------|-------------|
@@ -193,7 +193,7 @@ On **IT-Server**, also check:
 arp -a
 ```
 
-> **📋 Checkpoint:** Note the MAC address associated with the IT-Server's IP address on the IT-Workstation. This is the **legitimate** MAC address. Write it down — you will compare this to the poisoned entry later.
+> **Checkpoint:** Note the MAC address associated with the IT-Server's IP on the IT-Workstation. This is the legitimate MAC address. You will compare it to the poisoned entry later.
 
 #### Step 1.6 — Start a Packet Capture (Background)
 
@@ -203,7 +203,7 @@ On **IT-Workstation**, start a background ARP packet capture:
 tcpdump -i eth0 arp -w /tmp/arp_capture.pcap &
 ```
 
-> **💡 Tip:** Keep this running in the background throughout the lab. You'll analyze the captured ARP traffic later.
+> **Note:** Keep this running in the background. You will analyze the captured ARP traffic later.
 
 ---
 
@@ -215,7 +215,7 @@ Run the **`enable_forwarding.sh`** script on **Attacker** via the AE³GIS scenar
 
 This enables IP forwarding and installs `arpspoof` and `tcpdump`.
 
-> **❓ Think About It:** Why is IP forwarding necessary for this attack? What would happen to the victim's traffic if forwarding were disabled?
+> **Question:** Why is IP forwarding necessary for this attack? What would happen to the victim's traffic if forwarding were disabled?
 
 #### Step 2.2 — Launch the ARP Spoof
 
@@ -230,7 +230,7 @@ Example:
 
 You should see output indicating that spoofed ARP replies are being sent continuously.
 
-> **⚠️ Important:** The script runs two `arpspoof` processes in the background — one for each direction. Both are needed for a complete man-in-the-middle.
+> **Important:** The script runs two `arpspoof` processes in the background — one for each direction. Both are needed for a full man-in-the-middle.
 
 ---
 
@@ -244,14 +244,14 @@ On **IT-Workstation**, check the ARP table:
 arp -a
 ```
 
-> **📋 Checkpoint:** Compare the MAC address for IT-Server's IP to what you recorded in Step 1.5.
+> **Checkpoint:** Compare the MAC address for IT-Server's IP to what you recorded in Step 1.5.
 >
 > | | MAC Address for Server IP |
 > |---|---|
 > | **Before attack** | __________ (should be IT-Server's real MAC) |
-> | **After attack** | __________ (should now be Attacker's MAC!) |
+> | **After attack** | __________ (should now be Attacker's MAC) |
 >
-> **❓ Question:** What does this change mean? Where will IT-Workstation's traffic actually go now when it tries to reach IT-Server?
+> **Question:** What does this change mean? Where will IT-Workstation's traffic actually go now when it tries to reach IT-Server?
 
 #### Step 3.2 — Intercept Traffic
 
@@ -272,7 +272,7 @@ curl http://<IT-Server-IP>
 curl http://<IT-Server-IP>
 ```
 
-> **📋 Checkpoint:** Go back to the Attacker's terminal. You should see the HTTP request and response content in plain text flowing through the Attacker's machine. **The attacker can now read all unencrypted traffic!**
+> **Checkpoint:** Go back to the Attacker's terminal. You should see the HTTP request and response content in plain text flowing through the Attacker. The attacker can now read all unencrypted traffic.
 
 #### Step 3.4 — Analyze ARP Traffic
 
@@ -286,12 +286,12 @@ kill %1 2>/dev/null
 tcpdump -r /tmp/arp_capture.pcap -n
 ```
 
-> **📋 Checkpoint:** Look for these indicators of ARP spoofing:
+> **Checkpoint:** Look for these indicators of ARP spoofing:
 > - **Gratuitous ARP replies** — Unsolicited ARP responses from the Attacker's MAC address
 > - **Duplicate IP-to-MAC mappings** — The same IP address associated with two different MAC addresses
 > - **High frequency of ARP replies** — `arpspoof` sends continuous replies to maintain the poisoned cache
 >
-> **❓ Question:** How could a network monitoring tool automatically detect this kind of anomaly?
+> **Question:** How could a network monitoring tool automatically detect this kind of anomaly?
 
 ---
 
@@ -317,7 +317,7 @@ On **IT-Workstation**:
 tcpdump -i eth0 arp -c 30
 ```
 
-> **📋 Checkpoint:** In a normal network, ARP traffic is infrequent — only a few requests/replies per minute. During an active ARP spoofing attack, you'll see a **flood** of unsolicited ARP replies (one every 1–2 seconds). This high volume is a strong indicator.
+> **Checkpoint:** In a normal network, ARP traffic is infrequent — only a few requests/replies per minute. During an active ARP spoofing attack, you will see a flood of unsolicited ARP replies (one every 1–2 seconds). This high volume is a strong indicator.
 
 ---
 
@@ -350,11 +350,11 @@ Run the **`static_arp.sh`** script on **IT-Workstation**:
 ./static_arp.sh <IT-Server-IP> <IT-Server-REAL-MAC>
 ```
 
-> **⚠️ Important:** Use the **real** MAC address you recorded in Step 1.5, not the spoofed one!
+> **Important:** Use the real MAC address you recorded in Step 1.5, not the spoofed one.
 
 The script will display the updated ARP table. The entry should show as `PERM` (permanent).
 
-> **💡 Tip:** In a real production environment, you would also set static entries on the IT-Server to protect traffic in both directions.
+> **Note:** In production, you would also set static entries on the IT-Server to protect traffic in both directions.
 
 ---
 
@@ -376,7 +376,7 @@ On **IT-Workstation**:
 arp -a
 ```
 
-> **📋 Checkpoint:** The static entry should remain unchanged despite the spoofing attempt. The MAC address for IT-Server should still show the **real** MAC address, marked as `PERM`.
+> **Checkpoint:** The static entry should remain unchanged despite the spoofing attempt. The MAC address for IT-Server should still show the real MAC address, marked as `PERM`.
 
 #### Step 6.3 — Verify Traffic is Normal
 
@@ -392,7 +392,7 @@ On **Attacker**, check if traffic is being intercepted — it should **not** be:
 tcpdump -i eth0 -c 10 -n "host <IT-Workstation-IP> and host <IT-Server-IP> and port 80"
 ```
 
-> **❓ Question:** Why does the static entry prevent the attack? What are the practical limitations of using static ARP entries in a large enterprise network with hundreds of devices?
+> **Question:** Why does the static entry prevent the attack? What are the practical limitations of using static ARP entries in a large enterprise network with hundreds of devices?
 
 ---
 
