@@ -8,9 +8,9 @@ A collection of hands-on cybersecurity lab scenarios designed for the [AE³GIS](
 
 | # | Scenario | Network Layer | Attack Type | Difficulty | Folder |
 |---|----------|---------------|-------------|------------|--------|
-| 1 | **ARP Spoofing** | IT | Man-in-the-Middle | ⭐ Beginner | [`arp_spoofing/`](arp_spoofing/) |
-| 2 | **Denial of Service (DoS)** | IT | Availability Attack | ⭐⭐ Intermediate | [`dos/`](dos/) |
-| 3 | **Stuxnet (ICS Attack)** | OT / Field | PLC Logic Manipulation | ⭐⭐⭐ Advanced | [`stuxnet/`](stuxnet/) |
+| 1 | **ARP Spoofing** | IT | Man-in-the-Middle | Beginner | [`arp_spoofing/`](arp_spoofing/) |
+| 2 | **Denial of Service (DoS)** | IT | Availability Attack | Intermediate | [`dos/`](dos/) |
+| 3 | **Stuxnet (ICS Attack)** | OT / Field | PLC Logic Manipulation | Advanced | [`stuxnet/`](stuxnet/) |
 
 ---
 
@@ -90,7 +90,7 @@ Students perform a classic ARP spoofing man-in-the-middle attack on an IT networ
 - Detect ARP anomalies using packet captures
 - Mitigate using static ARP table entries
 
-👉 [Go to ARP Spoofing Scenario](arp_spoofing/)
+[Go to ARP Spoofing Scenario](arp_spoofing/)
 
 ---
 
@@ -104,7 +104,7 @@ Students explore multiple DoS attack vectors (SYN flood, ICMP flood, UDP flood) 
 - Detect floods using `tcpdump`, `netstat`, and Wireshark
 - Mitigate using SYN cookies and `iptables` rate limiting
 
-👉 [Go to DoS Scenario](dos/)
+[Go to DoS Scenario](dos/)
 
 ---
 
@@ -119,7 +119,7 @@ Students deploy a simulated industrial control system (PLC + HMI controlling a m
 - Understand the Stuxnet attack pattern (man-in-the-middle on process data)
 - Detect discrepancies between reported and actual process values
 
-👉 [Go to Stuxnet Scenario](stuxnet/)
+[Go to Stuxnet Scenario](stuxnet/)
 
 ---
 
