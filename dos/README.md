@@ -12,7 +12,7 @@ You will:
 5. Apply kernel-level and firewall-based mitigations
 6. Verify that mitigations restore service availability
 
-> **Difficulty:** ⭐⭐ Intermediate  
+> **Difficulty:** Intermediate  
 > **Estimated Time:** 60–90 minutes  
 > **Network Layer:** IT
 
@@ -160,7 +160,7 @@ On **each node**, determine the IP address:
 ip addr show eth0
 ```
 
-> **📋 Checkpoint:** Record the IP address of each node:
+> **Checkpoint:** Record the IP address of each node:
 >
 > | Node | IP Address |
 > |------|-----------|
@@ -191,7 +191,7 @@ Also measure baseline ping latency:
 ping -c 10 <IT-Server-IP>
 ```
 
-> **📋 Checkpoint:** Record the baseline metrics:
+> **Checkpoint:** Record the baseline metrics:
 >
 > | Metric | Baseline Value |
 > |--------|---------------|
@@ -217,7 +217,7 @@ Run the **`syn_flood.sh`** script on **Attacker**:
 ./syn_flood.sh <IT-Server-IP>
 ```
 
-> **⚠️ Note:** The flood runs until you press `Ctrl+C`. Keep it running while you observe the impact.
+> **Note:** The flood runs until you press `Ctrl+C`. Keep it running while you observe the impact.
 
 #### Step 2.3 — Measure Impact (While Attack is Running)
 
@@ -236,7 +236,7 @@ done
 ping -c 10 <IT-Server-IP>
 ```
 
-> **📋 Checkpoint:** Compare with your baseline:
+> **Checkpoint:** Compare with your baseline:
 >
 > | Metric | Baseline | During Attack |
 > |--------|----------|--------------|
@@ -265,7 +265,7 @@ netstat -an | grep SYN_RECV | wc -l
 tcpdump -i eth0 'tcp[tcpflags] & tcp-syn != 0' -c 20
 ```
 
-> **📋 Checkpoint:** How many `SYN_RECV` connections did you see? In a `tcpdump` capture of 20 packets, how many were SYN packets?
+> **Checkpoint:** How many `SYN_RECV` connections did you see? In a `tcpdump` capture of 20 packets, how many were SYN packets?
 
 #### Step 2.5 — Open Wireshark (If Available)
 
@@ -277,7 +277,7 @@ If your GNS3 setup supports Wireshark packet capture on the switch or server:
 
 <!-- TODO: Add screenshot of Wireshark showing SYN flood traffic pattern -->
 
-> **📋 Checkpoint:** What patterns do you observe? Notice the massive number of SYN packets with different (or same) source ports but no corresponding ACK packets.
+> **Checkpoint:** What patterns do you observe? Notice the volume of SYN packets with different (or same) source ports but no corresponding ACK packets.
 
 #### Step 2.6 — Stop the SYN Flood
 
@@ -319,7 +319,7 @@ for i in $(seq 1 5); do
 done
 ```
 
-> **❓ Question:** Is the impact of the ICMP flood on HTTP response times more or less severe than the SYN flood? Why might this be the case?
+> **Question:** Is the impact of the ICMP flood on HTTP response times more or less severe than the SYN flood? Why might this be the case?
 
 #### Step 3.3 — Detect the ICMP Flood
 
@@ -334,7 +334,7 @@ echo "Counting ICMP packets for 5 seconds..."
 timeout 5 tcpdump -i eth0 icmp 2>/dev/null | wc -l
 ```
 
-> **📋 Checkpoint:** How many ICMP packets per second is the server receiving? In normal operation, you'd expect very few (if any).
+> **Checkpoint:** How many ICMP packets per second is the server receiving? In normal operation, you would expect very few (if any).
 
 #### Step 3.4 — Stop the ICMP Flood
 
@@ -373,7 +373,7 @@ tcpdump -i eth0 udp -c 20
 tcpdump -i eth0 'icmp[icmptype] == 3' -c 10
 ```
 
-> **❓ Question:** Why does the server send ICMP "Port Unreachable" messages in response to UDP flood packets? How does this amplify the resource consumption?
+> **Question:** Why does the server send ICMP "Port Unreachable" messages in response to UDP flood packets? How does this amplify the resource consumption?
 
 #### Step 4.3 — Stop the UDP Flood
 
@@ -408,7 +408,7 @@ On **IT-Server**, examine the applied rules:
 iptables -L -n -v
 ```
 
-> **📋 Checkpoint:** You should see ACCEPT rules with rate limits and DROP rules for each protocol. Examine the packet counters — they should be at zero (will increase once an attack starts).
+> **Checkpoint:** You should see ACCEPT rules with rate limits and DROP rules for each protocol. Examine the packet counters — they should be at zero (will increase once an attack starts).
 
 ---
 
@@ -435,7 +435,7 @@ for i in $(seq 1 5); do
 done
 ```
 
-> **📋 Checkpoint:** Compare all three measurements:
+> **Checkpoint:** Compare all three measurements:
 >
 > | Metric | Baseline | Under Attack (no mitigation) | Under Attack (with mitigation) |
 > |--------|----------|------------------------------|-------------------------------|
@@ -451,7 +451,7 @@ On **IT-Server**:
 iptables -L -n -v
 ```
 
-> **📋 Checkpoint:** Look at the packet and byte counters on the DROP rules. How many packets have been dropped? This shows the mitigation is actively blocking flood traffic while allowing legitimate requests through.
+> **Checkpoint:** Look at the packet and byte counters on the DROP rules. How many packets have been dropped? This shows the mitigation is actively blocking flood traffic while allowing legitimate requests through.
 
 #### Step 6.4 — Stop the Attack
 
