@@ -2,7 +2,7 @@
 
 ## Overview
 
-In this advanced scenario, you will deploy a simulated **Industrial Control System (ICS)** — a PLC controlling a motor via a SCADA HMI — and then execute a **Stuxnet-inspired attack** that manipulates the PLC's process logic. The attack creates a **deception layer**: the HMI dashboard shows the operator that the motor is running normally, while in reality the motor is being destructively oscillated between start and stop at high frequency.
+In this advanced scenario, you will deploy a simulated **Industrial Control System (ICS)** — a PLC controlling a motor via a SCADA HMI — and then execute a **Stuxnet-inspired attack** that manipulates the PLC's process logic. The attack creates a **deception layer**: the HMI dashboard shows the operator that the motor is running normally, while the motor is actually being rapidly oscillated between start and stop at high frequency.
 
 This scenario demonstrates the most dangerous class of cyberattacks — those that **lie to the operator** while causing physical damage to industrial equipment.
 
@@ -16,7 +16,7 @@ You will:
 7. Observe the deception — the HMI shows normal operation while the real motor is under attack
 8. Detect the attack by analyzing Modbus register discrepancies
 
-> **Difficulty:** ⭐⭐⭐ Advanced  
+> **Difficulty:** Advanced  
 > **Estimated Time:** 90–120 minutes  
 > **Network Layer:** OT / Field
 
@@ -71,13 +71,13 @@ This lab recreates the core Stuxnet concept in a simplified environment:
 │                                                 0↔120Hz!)      │
 │                                                                 │
 │  The HMI shows target_freq=60Hz, motor_rpm=1775 (FAKE)        │
-│  The real motor oscillates violently between 0 and 3546 RPM    │
+│  The real motor oscillates between 0 and 3546 RPM               │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 The attack works by replacing the PLC's **Hardware Abstraction Layer** (called the PSM — Python SubModule in OpenPLC) with a malicious version that:
 - Maintains a **"visible" motor simulation** that reports normal values to the HMI
-- Runs a **"true" motor simulation** that oscillates the motor destructively
+- Runs a **"true" motor simulation** that oscillates the motor at damaging speeds
 - The operator sees normal readings and has no reason to suspect anything is wrong
 
 ---
@@ -189,7 +189,7 @@ On the **PLC** node, open a console and start the OpenPLC runtime:
 ./start_openplc.sh
 ```
 
-> **💡 Note:** The OpenPLC web interface will be available at `http://<PLC-IP>:8080` once started.
+> **Note:** The OpenPLC web interface will be available at `http://<PLC-IP>:8080` once started.
 
 #### Step 1.3 — Start ScadaBR
 
@@ -199,7 +199,7 @@ On the **HMI** node, open a console and start ScadaBR:
 ./ScadaBR_Installer/scadabr.sh start
 ```
 
-> **💡 Note:** ScadaBR may take 1–2 minutes to fully start. The web interface will be at `http://<HMI-IP>:8080/ScadaBR`.
+> **Note:** ScadaBR may take 1–2 minutes to fully start. The web interface will be at `http://<HMI-IP>:8080/ScadaBR`.
 
 #### Step 1.4 — Discover IP Addresses
 
@@ -223,7 +223,7 @@ On the **HMI** node:
 hostname -I
 ```
 
-> **📋 Checkpoint:** Record all IP addresses:
+> **Checkpoint:** Record all IP addresses:
 >
 > | Node | IP Address |
 > |------|-----------|
@@ -248,7 +248,7 @@ Before deploying, review what the PLC program does. The Structured Text program 
 
 The **PSM** (Python SubModule) `motor_psm.py` simulates realistic induction motor physics — it converts the target frequency to RPM using the motor's slip characteristics, poles, and ramp rates.
 
-> **❓ Think About It:** What is the relationship between frequency (Hz) and motor RPM? For a 2-pole induction motor, what RPM would you expect at 60 Hz?
+> **Question:** What is the relationship between frequency (Hz) and motor RPM? For a 2-pole induction motor, what RPM would you expect at 60 Hz?
 >
 > *Hint: Synchronous speed = (120 × frequency) / poles. Actual speed is slightly less due to slip.*
 
@@ -283,7 +283,7 @@ Login with:
 
 <!-- TODO: Add screenshot of OpenPLC web interface showing the motor program loaded and running -->
 
-> **📋 Checkpoint:**
+> **Checkpoint:**
 > - Is the PLC program listed under **Programs**?
 > - Does the **Dashboard** show the PLC status as **Running**?
 > - Can you see the I/O variables (motor_rpm, target_freq, motor_running)?
@@ -363,7 +363,7 @@ Using the ScadaBR Watch List:
 4. **Stop the motor**: Set `motor_stop` to `1`
 5. **Observe**: Watch `motor_running` change to `0` and `rpm` ramp down to 0
 
-> **📋 Checkpoint:**
+> **Checkpoint:**
 >
 > | Action | Expected `motor_running` | Expected `rpm` (approx.) |
 > |--------|------------------------|--------------------------|
@@ -371,7 +371,7 @@ Using the ScadaBR Watch List:
 > | Change to 90 Hz | 1 | ~2660 |
 > | Stop motor | 0 | 0 |
 >
-> **❓ Question:** Note the `stuxnet_rpm` value. At this point (before the attack), it should be the **same** as `rpm`. Why?
+> **Question:** Note the `stuxnet_rpm` value. At this point (before the attack), it should be the **same** as `rpm`. Why?
 
 ---
 
@@ -391,7 +391,7 @@ apt-get update && apt-get install -y tcpdump
 tcpdump -i eth0 port 502 -c 50 -n
 ```
 
-> **📋 Checkpoint:** Observe the communication pattern:
+> **Checkpoint:** Observe the communication pattern:
 > - The HMI polls the PLC every ~500ms
 > - You'll see Modbus TCP packets between the HMI IP and PLC IP on port 502
 > - Each exchange is a request/response pair (read coils, read registers)
@@ -406,7 +406,7 @@ If Wireshark is available on GNS3:
 
 <!-- TODO: Add screenshot of Wireshark showing Modbus TCP communication between HMI and PLC -->
 
-> **📋 Checkpoint:** In Wireshark, identify:
+> **Checkpoint:** In Wireshark, identify:
 > - **Function Code 1** (Read Coils) — Reading `motor_running`, `motor_start`, `motor_stop`
 > - **Function Code 3** (Read Holding Registers) — Reading `target_freq`
 > - **Function Code 4** (Read Input Registers) — Reading `motor_rpm`
@@ -417,7 +417,7 @@ If Wireshark is available on GNS3:
 
 ### Phase 5: Deploy the Stuxnet Attack
 
-> **⚠️ WARNING:** From this point forward, you are simulating a cyber attack on an industrial control system. In a real environment, this could cause physical damage to equipment and endanger human safety.
+> **WARNING:** From this point forward, you are simulating a cyber attack on an industrial control system. In a real environment, this could cause physical damage to equipment and endanger human safety.
 
 #### Step 5.1 — Understand the Attack
 
@@ -478,7 +478,7 @@ netstat -tulnp | grep 2605
 kill <PID>
 ```
 
-> **⚠️ Important:** Replace `<PID>` with the actual process ID from the `netstat` output.
+> **Important:** Replace `<PID>` with the actual process ID from the `netstat` output.
 
 Then, via the **OpenPLC Web Interface**:
 
@@ -500,18 +500,18 @@ Start the motor if it's not already running (set `motor_start` to `1`).
 
 Watch the data points carefully:
 
-> **📋 Checkpoint — The Deception:**
+> **Checkpoint — The Deception:**
 >
 > | Data Point | What You See | What's Really Happening |
 > |------------|-------------|------------------------|
-> | `motor_running` | `1` (running) | ✅ Appears correct |
-> | `target_freq` | `60` Hz (normal) | ✅ Operator-set value |
-> | `rpm` | ~1775 RPM (stable) | ❌ **FAKE** — This is the "visible" motor |
-> | `stuxnet_rpm` | Oscillating wildly! | ⚠️ **REAL** — The actual motor RPM |
-> | `stuxnet_target_freq` | Alternating 0↔120 Hz | ⚠️ **ATTACK** — Attacker-controlled |
+> | `motor_running` | `1` (running) | Appears correct |
+> | `target_freq` | `60` Hz (normal) | Operator-set value |
+> | `rpm` | ~1775 RPM (stable) | **FAKE** — This is the "visible" motor |
+> | `stuxnet_rpm` | Oscillating 0↔3546 | **REAL** — The actual motor RPM |
+> | `stuxnet_target_freq` | Alternating 0↔120 Hz | **ATTACK** — Attacker-controlled |
 >
 > **The operator (looking at `rpm`) sees a perfectly stable motor at 1775 RPM.**  
-> **In reality (`stuxnet_rpm`), the motor is being violently cycled between 0 and 3546 RPM.**
+> **In reality (`stuxnet_rpm`), the motor is being cycled between 0 and 3546 RPM.**
 
 <!-- TODO: Add screenshot of ScadaBR Watch List during the attack showing the discrepancy between rpm and stuxnet_rpm -->
 
@@ -528,7 +528,7 @@ The motor ramps up to 120 Hz (3546 RPM), then immediately drops to 0, then ramps
 - **Thermal damage** from rapid current changes
 - **Eventual mechanical failure** of the motor and connected equipment
 
-> **❓ Question:** Why is this type of attack more dangerous than simply shutting down the motor? What makes the deception component critical?
+> **Question:** Why is this type of attack more dangerous than simply shutting down the motor? What makes the deception component critical?
 
 #### Step 6.3 — Analyze Modbus Traffic During Attack
 
@@ -538,7 +538,7 @@ On the **Engineering-Workstation**, capture Modbus traffic during the attack:
 tcpdump -i eth0 port 502 -c 100 -n
 ```
 
-> **📋 Checkpoint:** The Modbus traffic pattern should look normal — same polling interval, same function codes. The attack is **invisible at the network level** because the PLC itself is generating the fake values. This is fundamentally different from a man-in-the-middle attack on the network.
+> **Checkpoint:** The Modbus traffic pattern should look normal — same polling interval, same function codes. The attack is invisible at the network level because the PLC itself is generating the fake values. This is fundamentally different from a man-in-the-middle attack on the network.
 
 ---
 
@@ -557,11 +557,11 @@ In the ScadaBR Watch List, compare:
 | `target_freq` | QW0 | Matches `stuxnet_target_freq` | Stable 60 Hz |
 | `stuxnet_target_freq` | QW1 | Matches `target_freq` | Oscillating 0↔120 |
 
-> **📋 Checkpoint:** The discrepancy between `rpm` and `stuxnet_rpm` is the **smoking gun**. In normal operation, these values are always identical. During the attack, they diverge completely.
+> **Checkpoint:** The discrepancy between `rpm` and `stuxnet_rpm` is the key indicator. In normal operation, these values are always identical. During the attack, they diverge completely.
 
 #### Step 7.2 — Detection Discussion
 
-> **❓ Questions for Analysis:**
+> **Questions for Analysis:**
 >
 > 1. In the real Stuxnet attack, the operators didn't have a `stuxnet_rpm` data point to compare against. How was the attack eventually discovered?
 > 2. What physical indicators might alert plant operators to this type of attack? (Hint: vibration, temperature, noise, power consumption)
@@ -626,16 +626,16 @@ The Structured Text program (`motor.st`) uses dual variable sets — a "visible"
 
 | Variable | Address | Type | Visible Set | True Set |
 |----------|---------|------|-------------|----------|
-| `run_motor` | %QX0.0 | BOOL | ✅ | |
-| `motor_running` | %QX0.1 | BOOL | ✅ | |
-| `stop_motor` | %QX0.2 | BOOL | ✅ | |
-| `run_motor_true` | %QX0.3 | BOOL | | ✅ |
-| `motor_running_true` | %QX0.4 | BOOL | | ✅ |
-| `stop_motor_true` | %QX0.5 | BOOL | | ✅ |
-| `target_freq` | %QW0 | INT | ✅ | |
-| `stuxnet_target_freq` | %QW1 | INT | | ✅ (init=120) |
-| `motor_rpm` | %IW0 | INT | ✅ | |
-| `stuxnet_rpm` | %IW1 | INT | | ✅ |
+| `run_motor` | %QX0.0 | BOOL | Yes | |
+| `motor_running` | %QX0.1 | BOOL | Yes | |
+| `stop_motor` | %QX0.2 | BOOL | Yes | |
+| `run_motor_true` | %QX0.3 | BOOL | | Yes |
+| `motor_running_true` | %QX0.4 | BOOL | | Yes |
+| `stop_motor_true` | %QX0.5 | BOOL | | Yes |
+| `target_freq` | %QW0 | INT | Yes | |
+| `stuxnet_target_freq` | %QW1 | INT | | Yes (init=120) |
+| `motor_rpm` | %IW0 | INT | Yes | |
+| `stuxnet_rpm` | %IW1 | INT | | Yes |
 
 ### Modbus Register Mapping
 
