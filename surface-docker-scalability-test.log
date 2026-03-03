@@ -1,0 +1,497 @@
+gns3@gns3vm:~$ python3 run_scalability_test.py --scales 100,150,200,250,300,350,400,450 --trials 3 --duration 180 --image-prefix tollan/
+
+============================================================
+  IT/OT NETWORK SCALABILITY TEST
+============================================================
+  Scales:         [100, 150, 200, 250, 300, 350, 400, 450]
+  Trials/scale:   3
+  Duration/trial: 180s
+  Poll interval:  0.5s
+  Images:         tollan/itot-plc:v0.2, tollan/itot-scada:v0.2, tollan/itot-dmz:v0.2
+  Est. total time: ~2.0 hours
+============================================================
+
+  Preflight checks...
+  ✓ Docker accessible
+  ✓ Image found: tollan/itot-plc:v0.2
+  ✓ Image found: tollan/itot-scada:v0.2
+  ✓ Image found: tollan/itot-dmz:v0.2
+  ✓ iptables available
+  ✓ Host memory usage: 7.2%
+  Cleaning up any leftover containers from previous runs...
+  ✓ Clean slate
+
+
+════════════════════════════════════════════════════════════
+  SCALE: 100 PLCs (1/8)
+════════════════════════════════════════════════════════════
+
+  ── Trial 1/3 (100 PLCs) ──
+  [17:50:40] INFO: Creating networks...
+  [17:50:40] INFO: Starting DMZ router...
+  [17:50:41] INFO: Starting 100 PLCs...
+  [██████████████████████████████] 100/100 PLCs started (100%)
+  [17:51:48] INFO: Measuring boot times...
+  [██████████████████████████████] 100/100 PLCs probed (100%)
+  [17:51:49] INFO: Boot times: avg=34.6s, max=66.9s
+  [17:51:49] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [17:51:50] INFO: Running experiment for 180s...
+  [17:55:03] INFO: Collecting metrics...
+  [17:55:03] INFO: Cleaning up...
+  [17:55:31] INFO: Trial 1 complete in 291s — RTT=0.9ms, Success=100.0%, Throughput=6902 B/s
+
+  ── Trial 2/3 (100 PLCs) ──
+  [17:55:31] INFO: Creating networks...
+  [17:55:31] INFO: Starting DMZ router...
+  [17:55:32] INFO: Starting 100 PLCs...
+  [██████████████████████████████] 100/100 PLCs started (100%)
+  [17:56:30] INFO: Measuring boot times...
+  [██████████████████████████████] 100/100 PLCs probed (100%)
+  [17:56:31] INFO: Boot times: avg=29.8s, max=58.2s
+  [17:56:31] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [17:56:31] INFO: Running experiment for 180s...
+  [17:59:44] INFO: Collecting metrics...
+  [17:59:44] INFO: Cleaning up...
+  [18:00:12] INFO: Trial 2 complete in 282s — RTT=0.9ms, Success=100.0%, Throughput=6925 B/s
+
+  ── Trial 3/3 (100 PLCs) ──
+  [18:00:12] INFO: Creating networks...
+  [18:00:13] INFO: Starting DMZ router...
+  [18:00:14] INFO: Starting 100 PLCs...
+  [██████████████████████████████] 100/100 PLCs started (100%)
+  [18:01:15] INFO: Measuring boot times...
+  [██████████████████████████████] 100/100 PLCs probed (100%)
+  [18:01:16] INFO: Boot times: avg=31.1s, max=61.2s
+  [18:01:16] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [18:01:16] INFO: Running experiment for 180s...
+  [18:04:29] INFO: Collecting metrics...
+  [18:04:29] INFO: Cleaning up...
+  [18:04:55] INFO: Trial 3 complete in 283s — RTT=0.9ms, Success=100.0%, Throughput=6846 B/s
+
+
+========================================================================================================================
+  IT/OT SCALABILITY TEST RESULTS
+========================================================================================================================
+  PLCs │ Trials │  RTT avg(ms) │  RTT p95(ms) │     Throughput │   Success% │    Req/min │    Boot(s) │   PLC CPU% │    PLC Mem │  Host Mem%
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   100 │    3/3 │      0.9±0.0 │      2.1±0.1 │ 6890.7±40.8 B/s │      100.0 │ 10084.0±59.7 │   31.8±2.4 │    0.1±0.0 │ 14.3±0.0MB │   28.4±0.1
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Baseline RTT (first scale): 0.91 ms
+  Saturation thresholds: success <90.0%, RTT >10.0x baseline, host mem >85.0%, boot time >120.0s
+
+==========================================================================================
+  PER-CONTAINER RESOURCE USAGE
+==========================================================================================
+  PLCs │     PLC CPU% │  PLC Mem(MB) │   SCADA CPU% │    SCADA Mem │     DMZ CPU% │      DMZ Mem
+──────────────────────────────────────────────────────────────────────────────────────────
+   100 │      0.1±0.0 │     14.3±0.0 │      5.9±0.5 │   13.9±0.0MB │      0.0±0.0 │    0.5±0.0MB
+──────────────────────────────────────────────────────────────────────────────────────────
+
+
+════════════════════════════════════════════════════════════
+  SCALE: 150 PLCs (2/8)
+════════════════════════════════════════════════════════════
+
+  ── Trial 1/3 (150 PLCs) ──
+  [18:04:55] INFO: Creating networks...
+  [18:04:56] INFO: Starting DMZ router...
+  [18:04:57] INFO: Starting 150 PLCs...
+  [██████████████████████████████] 150/150 PLCs started (100%)
+  [18:06:32] INFO: Measuring boot times...
+  [██████████████████████████████] 150/150 PLCs probed (100%)
+  [18:06:32] INFO: Boot times: avg=49.5s, max=94.6s
+  [18:06:32] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [18:06:33] INFO: Running experiment for 180s...
+  [18:09:39] INFO: Collecting metrics...
+  [18:09:39] INFO: Cleaning up...
+  [18:10:26] INFO: Trial 1 complete in 330s — RTT=0.9ms, Success=100.0%, Throughput=9444 B/s
+
+  ── Trial 2/3 (150 PLCs) ──
+  [18:10:26] INFO: Creating networks...
+  [18:10:26] INFO: Starting DMZ router...
+  [18:10:27] INFO: Starting 150 PLCs...
+  [██████████████████████████████] 150/150 PLCs started (100%)
+  [18:11:54] INFO: Measuring boot times...
+  [██████████████████████████████] 150/150 PLCs probed (100%)
+  [18:11:54] INFO: Boot times: avg=44.4s, max=86.8s
+  [18:11:54] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [18:11:55] INFO: Running experiment for 180s...
+  [18:15:02] INFO: Collecting metrics...
+  [18:15:02] INFO: Cleaning up...
+  [18:15:46] INFO: Trial 2 complete in 321s — RTT=1.0ms, Success=100.0%, Throughput=9481 B/s
+
+  ── Trial 3/3 (150 PLCs) ──
+  [18:15:46] INFO: Creating networks...
+  [18:15:47] INFO: Starting DMZ router...
+  [18:15:48] INFO: Starting 150 PLCs...
+  [██████████████████████████████] 150/150 PLCs started (100%)
+  [18:17:14] INFO: Measuring boot times...
+  [██████████████████████████████] 150/150 PLCs probed (100%)
+  [18:17:14] INFO: Boot times: avg=44.0s, max=86.4s
+  [18:17:14] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [18:17:15] INFO: Running experiment for 180s...
+  [18:20:22] INFO: Collecting metrics...
+  [18:20:22] INFO: Cleaning up...
+  [18:21:05] INFO: Trial 3 complete in 319s — RTT=0.9ms, Success=100.0%, Throughput=9476 B/s
+
+
+========================================================================================================================
+  IT/OT SCALABILITY TEST RESULTS
+========================================================================================================================
+  PLCs │ Trials │  RTT avg(ms) │  RTT p95(ms) │     Throughput │   Success% │    Req/min │    Boot(s) │   PLC CPU% │    PLC Mem │  Host Mem%
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   100 │    3/3 │      0.9±0.0 │      2.1±0.1 │ 6890.7±40.8 B/s │      100.0 │ 10084.0±59.7 │   31.8±2.4 │    0.1±0.0 │ 14.3±0.0MB │   28.4±0.1
+   150 │    3/3 │      0.9±0.0 │      2.2±0.0 │ 9466.8±20.3 B/s │      100.0 │ 13853.9±29.7 │   46.0±3.1 │    0.1±0.0 │ 14.3±0.0MB │   39.0±0.0
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Baseline RTT (first scale): 0.91 ms
+  Saturation thresholds: success <90.0%, RTT >10.0x baseline, host mem >85.0%, boot time >120.0s
+
+==========================================================================================
+  PER-CONTAINER RESOURCE USAGE
+==========================================================================================
+  PLCs │     PLC CPU% │  PLC Mem(MB) │   SCADA CPU% │    SCADA Mem │     DMZ CPU% │      DMZ Mem
+──────────────────────────────────────────────────────────────────────────────────────────
+   100 │      0.1±0.0 │     14.3±0.0 │      5.9±0.5 │   13.9±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   150 │      0.1±0.0 │     14.3±0.0 │      8.8±0.8 │   14.3±0.0MB │      0.0±0.0 │    0.5±0.0MB
+──────────────────────────────────────────────────────────────────────────────────────────
+
+
+════════════════════════════════════════════════════════════
+  SCALE: 200 PLCs (3/8)
+════════════════════════════════════════════════════════════
+
+  ── Trial 1/3 (200 PLCs) ──
+  [18:21:05] INFO: Creating networks...
+  [18:21:06] INFO: Starting DMZ router...
+  [18:21:07] INFO: Starting 200 PLCs...
+  [██████████████████████████████] 200/200 PLCs started (100%)
+  [18:23:14] INFO: Measuring boot times...
+  [██████████████████████████████] 200/200 PLCs probed (100%)
+  [18:23:14] INFO: Boot times: avg=68.5s, max=126.7s
+  [18:23:14] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [18:23:15] INFO: Running experiment for 180s...
+  [18:26:17] INFO: Collecting metrics...
+  [18:26:17] INFO: Cleaning up...
+  [18:27:20] INFO: Trial 1 complete in 375s — RTT=1.0ms, Success=100.0%, Throughput=11437 B/s
+
+  ── Trial 2/3 (200 PLCs) ──
+  [18:27:20] INFO: Creating networks...
+  [18:27:21] INFO: Starting DMZ router...
+  [18:27:22] INFO: Starting 200 PLCs...
+  [██████████████████████████████] 200/200 PLCs started (100%)
+  [18:29:21] INFO: Measuring boot times...
+  [██████████████████████████████] 200/200 PLCs probed (100%)
+  [18:29:21] INFO: Boot times: avg=61.6s, max=119.2s
+  [18:29:21] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [18:29:22] INFO: Running experiment for 180s...
+  [18:32:37] INFO: Collecting metrics...
+  [18:32:37] INFO: Cleaning up...
+  [18:33:35] INFO: Trial 2 complete in 374s — RTT=1.0ms, Success=100.0%, Throughput=11496 B/s
+
+  ── Trial 3/3 (200 PLCs) ──
+  [18:33:35] INFO: Creating networks...
+  [18:33:35] INFO: Starting DMZ router...
+  [18:33:36] INFO: Starting 200 PLCs...
+  [██████████████████████████████] 200/200 PLCs started (100%)
+  [18:35:33] INFO: Measuring boot times...
+  [██████████████████████████████] 200/200 PLCs probed (100%)
+  [18:35:34] INFO: Boot times: avg=59.9s, max=117.3s
+  [18:35:34] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [18:35:34] INFO: Running experiment for 180s...
+  [18:38:36] INFO: Collecting metrics...
+  [18:38:37] INFO: Cleaning up...
+  [18:39:38] INFO: Trial 3 complete in 363s — RTT=1.0ms, Success=100.0%, Throughput=11578 B/s
+
+
+========================================================================================================================
+  IT/OT SCALABILITY TEST RESULTS
+========================================================================================================================
+  PLCs │ Trials │  RTT avg(ms) │  RTT p95(ms) │     Throughput │   Success% │    Req/min │    Boot(s) │   PLC CPU% │    PLC Mem │  Host Mem%
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   100 │    3/3 │      0.9±0.0 │      2.1±0.1 │ 6890.7±40.8 B/s │      100.0 │ 10084.0±59.7 │   31.8±2.4 │    0.1±0.0 │ 14.3±0.0MB │   28.4±0.1
+   150 │    3/3 │      0.9±0.0 │      2.2±0.0 │ 9466.8±20.3 B/s │      100.0 │ 13853.9±29.7 │   46.0±3.1 │    0.1±0.0 │ 14.3±0.0MB │   39.0±0.0
+   200 │    3/3 │      1.0±0.0 │      2.3±0.0 │ 11503.6±71.0 B/s │      100.0 │ 16834.5±103.9 │   63.3±4.6 │    0.1±0.0 │ 14.3±0.0MB │   49.4±0.1
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Baseline RTT (first scale): 0.91 ms
+  Saturation thresholds: success <90.0%, RTT >10.0x baseline, host mem >85.0%, boot time >120.0s
+
+==========================================================================================
+  PER-CONTAINER RESOURCE USAGE
+==========================================================================================
+  PLCs │     PLC CPU% │  PLC Mem(MB) │   SCADA CPU% │    SCADA Mem │     DMZ CPU% │      DMZ Mem
+──────────────────────────────────────────────────────────────────────────────────────────
+   100 │      0.1±0.0 │     14.3±0.0 │      5.9±0.5 │   13.9±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   150 │      0.1±0.0 │     14.3±0.0 │      8.8±0.8 │   14.3±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   200 │      0.1±0.0 │     14.3±0.0 │     11.8±0.4 │   14.8±0.0MB │      0.0±0.0 │    0.5±0.0MB
+──────────────────────────────────────────────────────────────────────────────────────────
+
+
+════════════════════════════════════════════════════════════
+  SCALE: 250 PLCs (4/8)
+════════════════════════════════════════════════════════════
+
+  ── Trial 1/3 (250 PLCs) ──
+  [18:39:38] INFO: Creating networks...
+  [18:39:38] INFO: Starting DMZ router...
+  [18:39:39] INFO: Starting 250 PLCs...
+  [██████████████████████████████] 250/250 PLCs started (100%)
+  [18:42:14] INFO: Measuring boot times...
+  [██████████████████████████████] 250/250 PLCs probed (100%)
+  [18:42:15] INFO: Boot times: avg=81.5s, max=155.0s
+  [18:42:15] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [18:42:16] INFO: Running experiment for 180s...
+  [18:45:24] INFO: Collecting metrics...
+  [18:45:24] INFO: Cleaning up...
+  [18:46:40] INFO: Trial 1 complete in 422s — RTT=1.0ms, Success=100.0%, Throughput=13424 B/s
+
+  ── Trial 2/3 (250 PLCs) ──
+  [18:46:40] INFO: Creating networks...
+  [18:46:40] INFO: Starting DMZ router...
+  [18:46:41] INFO: Starting 250 PLCs...
+  [██████████████████████████████] 250/250 PLCs started (100%)
+  [18:49:12] INFO: Measuring boot times...
+  [██████████████████████████████] 250/250 PLCs probed (100%)
+  [18:49:12] INFO: Boot times: avg=76.6s, max=150.5s
+  [18:49:12] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [18:49:13] INFO: Running experiment for 180s...
+  [18:52:26] INFO: Collecting metrics...
+  [18:52:26] INFO: Cleaning up...
+  [18:53:45] INFO: Trial 2 complete in 425s — RTT=1.0ms, Success=100.0%, Throughput=13142 B/s
+
+  ── Trial 3/3 (250 PLCs) ──
+  [18:53:45] INFO: Creating networks...
+  [18:53:46] INFO: Starting DMZ router...
+  [18:53:47] INFO: Starting 250 PLCs...
+  [██████████████████████████████] 250/250 PLCs started (100%)
+  [18:56:19] INFO: Measuring boot times...
+  [██████████████████████████████] 250/250 PLCs probed (100%)
+  [18:56:20] INFO: Boot times: avg=78.5s, max=152.1s
+  [18:56:20] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [18:56:21] INFO: Running experiment for 180s...
+  [18:59:31] INFO: Collecting metrics...
+  [18:59:31] INFO: Cleaning up...
+  [19:00:44] INFO: Trial 3 complete in 419s — RTT=1.1ms, Success=100.0%, Throughput=13075 B/s
+
+
+========================================================================================================================
+  IT/OT SCALABILITY TEST RESULTS
+========================================================================================================================
+  PLCs │ Trials │  RTT avg(ms) │  RTT p95(ms) │     Throughput │   Success% │    Req/min │    Boot(s) │   PLC CPU% │    PLC Mem │  Host Mem%
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   100 │    3/3 │      0.9±0.0 │      2.1±0.1 │ 6890.7±40.8 B/s │      100.0 │ 10084.0±59.7 │   31.8±2.4 │    0.1±0.0 │ 14.3±0.0MB │   28.4±0.1
+   150 │    3/3 │      0.9±0.0 │      2.2±0.0 │ 9466.8±20.3 B/s │      100.0 │ 13853.9±29.7 │   46.0±3.1 │    0.1±0.0 │ 14.3±0.0MB │   39.0±0.0
+   200 │    3/3 │      1.0±0.0 │      2.3±0.0 │ 11503.6±71.0 B/s │      100.0 │ 16834.5±103.9 │   63.3±4.6 │    0.1±0.0 │ 14.3±0.0MB │   49.4±0.1
+   250 │    3/3 │      1.0±0.1 │      2.3±0.1 │ 13213.9±185.5 B/s │      100.0 │ 19337.4±271.4 │   78.9±2.5 │    0.1±0.0 │ 14.3±0.0MB │   59.6±0.0
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Baseline RTT (first scale): 0.91 ms
+  Saturation thresholds: success <90.0%, RTT >10.0x baseline, host mem >85.0%, boot time >120.0s
+
+==========================================================================================
+  PER-CONTAINER RESOURCE USAGE
+==========================================================================================
+  PLCs │     PLC CPU% │  PLC Mem(MB) │   SCADA CPU% │    SCADA Mem │     DMZ CPU% │      DMZ Mem
+──────────────────────────────────────────────────────────────────────────────────────────
+   100 │      0.1±0.0 │     14.3±0.0 │      5.9±0.5 │   13.9±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   150 │      0.1±0.0 │     14.3±0.0 │      8.8±0.8 │   14.3±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   200 │      0.1±0.0 │     14.3±0.0 │     11.8±0.4 │   14.8±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   250 │      0.1±0.0 │     14.3±0.0 │     13.9±0.3 │   15.3±0.0MB │      0.0±0.0 │    0.5±0.0MB
+──────────────────────────────────────────────────────────────────────────────────────────
+
+
+════════════════════════════════════════════════════════════
+  SCALE: 300 PLCs (5/8)
+════════════════════════════════════════════════════════════
+
+  ── Trial 1/3 (300 PLCs) ──
+  [19:00:44] INFO: Creating networks...
+  [19:00:45] INFO: Starting DMZ router...
+  [19:00:46] INFO: Starting 300 PLCs...
+  [██████████████████████████████] 300/300 PLCs started (100%)
+  [19:03:53] INFO: Measuring boot times...
+  [██████████████████████████████] 300/300 PLCs probed (100%)
+  [19:03:53] INFO: Boot times: avg=98.5s, max=187.0s
+  [19:03:53] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [19:03:54] INFO: Running experiment for 180s...
+  [19:06:56] INFO: Collecting metrics...
+  [19:06:56] INFO: Cleaning up...
+  [19:08:35] INFO: Trial 1 complete in 470s — RTT=4.5ms, Success=99.8%, Throughput=11797 B/s
+
+  ── Trial 2/3 (300 PLCs) ──
+  [19:08:35] INFO: Creating networks...
+  [19:08:35] INFO: Starting DMZ router...
+  [19:08:36] INFO: Starting 300 PLCs...
+  [██████████████████████████████] 300/300 PLCs started (100%)
+  [19:11:48] INFO: Measuring boot times...
+  [██████████████████████████████] 300/300 PLCs probed (100%)
+  [19:11:49] INFO: Boot times: avg=99.2s, max=191.9s
+  [19:11:49] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [19:11:50] INFO: Running experiment for 180s...
+  [19:15:08] INFO: Collecting metrics...
+  [19:15:08] INFO: Cleaning up...
+  [19:16:37] INFO: Trial 2 complete in 482s — RTT=1.1ms, Success=100.0%, Throughput=12520 B/s
+
+  ── Trial 3/3 (300 PLCs) ──
+  [19:16:37] INFO: Creating networks...
+  [19:16:37] INFO: Starting DMZ router...
+  [19:16:38] INFO: Starting 300 PLCs...
+  [██████████████████████████████] 300/300 PLCs started (100%)
+  [19:19:52] INFO: Measuring boot times...
+  [██████████████████████████████] 300/300 PLCs probed (100%)
+  [19:19:52] INFO: Boot times: avg=98.2s, max=193.5s
+  [19:19:52] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [19:19:53] INFO: Running experiment for 180s...
+  [19:22:57] INFO: Collecting metrics...
+  [19:22:57] INFO: Cleaning up...
+  [19:24:57] INFO: Trial 3 complete in 501s — RTT=1.3ms, Success=99.7%, Throughput=11579 B/s
+
+
+========================================================================================================================
+  IT/OT SCALABILITY TEST RESULTS
+========================================================================================================================
+  PLCs │ Trials │  RTT avg(ms) │  RTT p95(ms) │     Throughput │   Success% │    Req/min │    Boot(s) │   PLC CPU% │    PLC Mem │  Host Mem%
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   100 │    3/3 │      0.9±0.0 │      2.1±0.1 │ 6890.7±40.8 B/s │      100.0 │ 10084.0±59.7 │   31.8±2.4 │    0.1±0.0 │ 14.3±0.0MB │   28.4±0.1
+   150 │    3/3 │      0.9±0.0 │      2.2±0.0 │ 9466.8±20.3 B/s │      100.0 │ 13853.9±29.7 │   46.0±3.1 │    0.1±0.0 │ 14.3±0.0MB │   39.0±0.0
+   200 │    3/3 │      1.0±0.0 │      2.3±0.0 │ 11503.6±71.0 B/s │      100.0 │ 16834.5±103.9 │   63.3±4.6 │    0.1±0.0 │ 14.3±0.0MB │   49.4±0.1
+   250 │    3/3 │      1.0±0.1 │      2.3±0.1 │ 13213.9±185.5 B/s │      100.0 │ 19337.4±271.4 │   78.9±2.5 │    0.1±0.0 │ 14.3±0.0MB │   59.6±0.0
+   300 │    3/3 │      2.3±1.9 │      2.7±0.3 │ 11965.3±493.0 B/s │   99.9±0.1 │ 17511.5±721.3 │   98.6±0.5 │    0.1±0.0 │ 14.3±0.0MB │   70.1±0.0
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Baseline RTT (first scale): 0.91 ms
+  Saturation thresholds: success <90.0%, RTT >10.0x baseline, host mem >85.0%, boot time >120.0s
+
+==========================================================================================
+  PER-CONTAINER RESOURCE USAGE
+==========================================================================================
+  PLCs │     PLC CPU% │  PLC Mem(MB) │   SCADA CPU% │    SCADA Mem │     DMZ CPU% │      DMZ Mem
+──────────────────────────────────────────────────────────────────────────────────────────
+   100 │      0.1±0.0 │     14.3±0.0 │      5.9±0.5 │   13.9±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   150 │      0.1±0.0 │     14.3±0.0 │      8.8±0.8 │   14.3±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   200 │      0.1±0.0 │     14.3±0.0 │     11.8±0.4 │   14.8±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   250 │      0.1±0.0 │     14.3±0.0 │     13.9±0.3 │   15.3±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   300 │      0.1±0.0 │     14.3±0.0 │     12.7±1.3 │   15.6±0.0MB │      0.0±0.0 │    0.5±0.0MB
+──────────────────────────────────────────────────────────────────────────────────────────
+
+
+════════════════════════════════════════════════════════════
+  SCALE: 350 PLCs (6/8)
+════════════════════════════════════════════════════════════
+
+  ── Trial 1/3 (350 PLCs) ──
+  [19:24:57] INFO: Creating networks...
+  [19:24:58] INFO: Starting DMZ router...
+  [19:24:59] INFO: Starting 350 PLCs...
+  [██████████████████████████████] 350/350 PLCs started (100%)
+  [19:29:00] INFO: Measuring boot times...
+  [██████████████████████████████] 350/350 PLCs probed (100%)
+  [19:29:01] INFO: Boot times: avg=128.3s, max=240.8s
+  [19:29:01] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [19:29:02] INFO: Running experiment for 180s...
+  [19:32:19] INFO: Collecting metrics...
+  [19:32:19] INFO: Cleaning up...
+  [19:34:00] INFO: Trial 1 complete in 542s — RTT=1.9ms, Success=99.9%, Throughput=13134 B/s
+
+  ── Trial 2/3 (350 PLCs) ──
+  [19:34:00] INFO: Creating networks...
+  [19:34:00] INFO: Starting DMZ router...
+  [19:34:02] INFO: Starting 350 PLCs...
+  [██████████████████████████████] 350/350 PLCs started (100%)
+  [19:38:26] INFO: Measuring boot times...
+  [██████████████████████████████] 350/350 PLCs probed (100%)
+  [19:38:27] INFO: Boot times: avg=133.2s, max=264.6s
+  [19:38:27] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [19:38:28] INFO: Running experiment for 180s...
+  [19:41:42] INFO: Collecting metrics...
+  [19:41:42] INFO: Cleaning up...
+  [19:43:21] INFO: Trial 2 complete in 561s — RTT=1.1ms, Success=99.7%, Throughput=13298 B/s
+
+  ── Trial 3/3 (350 PLCs) ──
+  [19:43:21] INFO: Creating networks...
+  [19:43:22] INFO: Starting DMZ router...
+  [19:43:23] INFO: Starting 350 PLCs...
+  [██████████████████████████████] 350/350 PLCs started (100%)
+  [19:46:41] INFO: Measuring boot times...
+  [██████████████████████████████] 350/350 PLCs probed (100%)
+  [19:46:42] INFO: Boot times: avg=102.5s, max=198.7s
+  [19:46:42] INFO: Starting SCADA poller (duration=180s, interval=0.5s)...
+  [19:46:43] INFO: Running experiment for 180s...
+  [19:49:49] INFO: Collecting metrics...
+  [19:49:49] INFO: Cleaning up...
+  [19:51:14] INFO: Trial 3 complete in 473s — RTT=1.1ms, Success=99.9%, Throughput=14025 B/s
+
+
+========================================================================================================================
+  IT/OT SCALABILITY TEST RESULTS
+========================================================================================================================
+  PLCs │ Trials │  RTT avg(ms) │  RTT p95(ms) │     Throughput │   Success% │    Req/min │    Boot(s) │   PLC CPU% │    PLC Mem │  Host Mem%
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   100 │    3/3 │      0.9±0.0 │      2.1±0.1 │ 6890.7±40.8 B/s │      100.0 │ 10084.0±59.7 │   31.8±2.4 │    0.1±0.0 │ 14.3±0.0MB │   28.4±0.1
+   150 │    3/3 │      0.9±0.0 │      2.2±0.0 │ 9466.8±20.3 B/s │      100.0 │ 13853.9±29.7 │   46.0±3.1 │    0.1±0.0 │ 14.3±0.0MB │   39.0±0.0
+   200 │    3/3 │      1.0±0.0 │      2.3±0.0 │ 11503.6±71.0 B/s │      100.0 │ 16834.5±103.9 │   63.3±4.6 │    0.1±0.0 │ 14.3±0.0MB │   49.4±0.1
+   250 │    3/3 │      1.0±0.1 │      2.3±0.1 │ 13213.9±185.5 B/s │      100.0 │ 19337.4±271.4 │   78.9±2.5 │    0.1±0.0 │ 14.3±0.0MB │   59.6±0.0
+   300 │    3/3 │      2.3±1.9 │      2.7±0.3 │ 11965.3±493.0 B/s │   99.9±0.1 │ 17511.5±721.3 │   98.6±0.5 │    0.1±0.0 │ 14.3±0.0MB │   70.1±0.0
+   350 │    3/3 │      1.4±0.5 │      2.5±0.2 │ 13485.3±474.2 B/s │   99.8±0.2 │ 19736.1±694.0 │ 121.3±16.5 │    0.1±0.0 │ 14.3±0.0MB │   81.7±0.2
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Baseline RTT (first scale): 0.91 ms
+  Saturation thresholds: success <90.0%, RTT >10.0x baseline, host mem >85.0%, boot time >120.0s
+
+==========================================================================================
+  PER-CONTAINER RESOURCE USAGE
+==========================================================================================
+  PLCs │     PLC CPU% │  PLC Mem(MB) │   SCADA CPU% │    SCADA Mem │     DMZ CPU% │      DMZ Mem
+──────────────────────────────────────────────────────────────────────────────────────────
+   100 │      0.1±0.0 │     14.3±0.0 │      5.9±0.5 │   13.9±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   150 │      0.1±0.0 │     14.3±0.0 │      8.8±0.8 │   14.3±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   200 │      0.1±0.0 │     14.3±0.0 │     11.8±0.4 │   14.8±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   250 │      0.1±0.0 │     14.3±0.0 │     13.9±0.3 │   15.3±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   300 │      0.1±0.0 │     14.3±0.0 │     12.7±1.3 │   15.6±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   350 │      0.1±0.0 │     14.3±0.0 │     13.8±0.5 │   16.0±0.0MB │      0.0±0.0 │    0.5±0.0MB
+──────────────────────────────────────────────────────────────────────────────────────────
+
+  *** SATURATION DETECTED at 350 PLCs: boot time 121.3s > 120.0s ***
+
+
+========================================================================================================================
+  FINAL RESULTS
+========================================================================================================================
+
+
+========================================================================================================================
+  IT/OT SCALABILITY TEST RESULTS
+========================================================================================================================
+  PLCs │ Trials │  RTT avg(ms) │  RTT p95(ms) │     Throughput │   Success% │    Req/min │    Boot(s) │   PLC CPU% │    PLC Mem │  Host Mem%
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   100 │    3/3 │      0.9±0.0 │      2.1±0.1 │ 6890.7±40.8 B/s │      100.0 │ 10084.0±59.7 │   31.8±2.4 │    0.1±0.0 │ 14.3±0.0MB │   28.4±0.1
+   150 │    3/3 │      0.9±0.0 │      2.2±0.0 │ 9466.8±20.3 B/s │      100.0 │ 13853.9±29.7 │   46.0±3.1 │    0.1±0.0 │ 14.3±0.0MB │   39.0±0.0
+   200 │    3/3 │      1.0±0.0 │      2.3±0.0 │ 11503.6±71.0 B/s │      100.0 │ 16834.5±103.9 │   63.3±4.6 │    0.1±0.0 │ 14.3±0.0MB │   49.4±0.1
+   250 │    3/3 │      1.0±0.1 │      2.3±0.1 │ 13213.9±185.5 B/s │      100.0 │ 19337.4±271.4 │   78.9±2.5 │    0.1±0.0 │ 14.3±0.0MB │   59.6±0.0
+   300 │    3/3 │      2.3±1.9 │      2.7±0.3 │ 11965.3±493.0 B/s │   99.9±0.1 │ 17511.5±721.3 │   98.6±0.5 │    0.1±0.0 │ 14.3±0.0MB │   70.1±0.0
+   350 │    3/3 │      1.4±0.5 │      2.5±0.2 │ 13485.3±474.2 B/s │   99.8±0.2 │ 19736.1±694.0 │ 121.3±16.5 │    0.1±0.0 │ 14.3±0.0MB │   81.7±0.2
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Baseline RTT (first scale): 0.91 ms
+  Saturation thresholds: success <90.0%, RTT >10.0x baseline, host mem >85.0%, boot time >120.0s
+
+==========================================================================================
+  PER-CONTAINER RESOURCE USAGE
+==========================================================================================
+  PLCs │     PLC CPU% │  PLC Mem(MB) │   SCADA CPU% │    SCADA Mem │     DMZ CPU% │      DMZ Mem
+──────────────────────────────────────────────────────────────────────────────────────────
+   100 │      0.1±0.0 │     14.3±0.0 │      5.9±0.5 │   13.9±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   150 │      0.1±0.0 │     14.3±0.0 │      8.8±0.8 │   14.3±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   200 │      0.1±0.0 │     14.3±0.0 │     11.8±0.4 │   14.8±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   250 │      0.1±0.0 │     14.3±0.0 │     13.9±0.3 │   15.3±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   300 │      0.1±0.0 │     14.3±0.0 │     12.7±1.3 │   15.6±0.0MB │      0.0±0.0 │    0.5±0.0MB
+   350 │      0.1±0.0 │     14.3±0.0 │     13.8±0.5 │   16.0±0.0MB │      0.0±0.0 │    0.5±0.0MB
+──────────────────────────────────────────────────────────────────────────────────────────
+
+  Saturation point: between 300 and 350 PLCs
+
+  Workload: Modbus/TCP read (10 registers), poll interval 0.5s
+  Request size: 12 bytes, Response size: 29 bytes per poll
+  Trials per scale: 3, Duration per trial: 180s
