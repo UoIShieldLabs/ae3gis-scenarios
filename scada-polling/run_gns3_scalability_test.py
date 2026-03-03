@@ -253,6 +253,7 @@ class GNS3API:
         data = {
             "name": name,
             "template_type": "docker",
+            "compute_id": "local",
             "image": image,
             "adapters": adapters,
             "start_command": start_cmd,
