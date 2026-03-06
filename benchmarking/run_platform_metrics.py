@@ -26,9 +26,6 @@ import socket
 import statistics
 import subprocess
 import sys
-import warnings
-warnings.filterwarnings("ignore", category=DeprecationWarning, module="telnetlib")
-import telnetlib
 import threading
 import time
 from dataclasses import dataclass, field
@@ -677,8 +674,8 @@ def measure_api_latency(api, project_id, nodes, n_requests):
 
 
 def measure_telnet_latency(api_host, nodes, n_requests):
-    """Measure time to execute a command via telnet console."""
-    lat = LatencyMeasurement(endpoint="Telnet command (hostname)")
+    """Measure time to execute a command via telnet console using raw sockets."""
+    lat = LatencyMeasurement(endpoint="Telnet command (echo)")
 
     # Find a PLC node with console info
     console_port = None
@@ -693,42 +690,62 @@ def measure_telnet_latency(api_host, nodes, n_requests):
 
     try:
         # Connect once
-        tn = telnetlib.Telnet(api_host, console_port, timeout=TELNET_TIMEOUT)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(TELNET_TIMEOUT)
+        sock.connect((api_host, console_port))
         time.sleep(1)  # wait for shell to be ready
-        # Clear any initial output (MOTD, prompt, etc.)
-        try:
-            tn.read_very_eager()
-        except Exception:
-            pass
 
-        # Send a dummy command first to ensure shell is responsive
-        tn.write(b"echo ready\n")
+        # Clear any initial output (MOTD, prompt, telnet negotiation)
         try:
-            tn.read_until(b"ready", timeout=5)
-            tn.read_very_eager()  # clear remaining output
-        except Exception:
+            while True:
+                sock.settimeout(0.5)
+                sock.recv(4096)
+        except (socket.timeout, BlockingIOError):
             pass
+        sock.settimeout(TELNET_TIMEOUT)
+
+        # Send a dummy command to ensure shell is responsive
+        sock.sendall(b"\n")
+        time.sleep(0.5)
+        try:
+            while True:
+                sock.settimeout(0.5)
+                sock.recv(4096)
+        except (socket.timeout, BlockingIOError):
+            pass
+        sock.settimeout(TELNET_TIMEOUT)
 
         # Now measure individual commands
         for i in range(n_requests):
             try:
                 # Clear any buffered output
                 try:
-                    tn.read_very_eager()
-                except Exception:
+                    sock.settimeout(0.1)
+                    while True:
+                        sock.recv(4096)
+                except (socket.timeout, BlockingIOError):
                     pass
+                sock.settimeout(TELNET_TIMEOUT)
 
-                # Time only the command execution
-                marker = f"MARK{int(time.time()*1000)}"
+                # Time the command execution
+                marker = f"MARK{int(time.time()*1000000)}"
                 t0 = time.time()
-                tn.write(f"echo {marker}\n".encode())
-                tn.read_until(marker.encode(), timeout=TELNET_TIMEOUT)
+                sock.sendall(f"echo {marker}\n".encode())
+
+                # Read until we see the marker in output
+                buf = b""
+                while marker.encode() not in buf:
+                    chunk = sock.recv(4096)
+                    if not chunk:
+                        break
+                    buf += chunk
+
                 t1 = time.time()
                 lat.times_ms.append((t1 - t0) * 1000)
             except Exception as e:
                 log(f"Telnet command {i+1} failed: {e}", "WARN")
 
-        tn.close()
+        sock.close()
 
     except Exception as e:
         log(f"Telnet connection failed: {e}", "WARN")
@@ -1174,6 +1191,33 @@ Examples:
                         help="Number of API requests per endpoint for latency test")
     parser.add_argument("--telnet-requests", type=int, default=TELNET_LATENCY_REQUESTS,
                         help="Number of telnet commands for latency test")
+    parser.add_argument("--label", type=str, default="",
+                        help="Label for log filename (e.g., 'macbook-air', 'mac-studio-remote')")
+
+    args = parser.parse_args()
+
+    # ── Set up logging to file ──
+    scales_str = args.scales.replace(",", "-")
+    host_str = args.gns3_host.replace(".", "_")
+    label = args.label or host_str
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    log_filename = f"metrics_{label}_s{scales_str}_t{args.trials}_{timestamp}.log"
+
+    class Tee:
+        """Write to both stdout and a log file."""
+        def __init__(self, filename):
+            self.terminal = sys.stdout
+            self.log = open(filename, "w")
+        def write(self, msg):
+            self.terminal.write(msg)
+            self.log.write(msg)
+            self.log.flush()
+        def flush(self):
+            self.terminal.flush()
+            self.log.flush()
+
+    sys.stdout = Tee(log_filename)
+    print(f"  Logging to: {log_filename}")
 
     args = parser.parse_args()
 
