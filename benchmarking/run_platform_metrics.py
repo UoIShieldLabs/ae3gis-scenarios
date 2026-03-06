@@ -38,7 +38,7 @@ from urllib.error import URLError, HTTPError
 # CONFIGURATION
 # ═══════════════════════════════════════════════════════════════════
 
-GNS3_HOST = "localhost"
+GNS3_HOST = "192.168.56.101"
 GNS3_PORT = 80
 SWITCH_TEMPLATE_NAME = "Open-vSwitch"
 SWITCH_PORTS = 16
@@ -54,9 +54,9 @@ NODE_SPACING_Y = 80
 PLC_GRID_COLS = 20
 
 # Latency test
-API_LATENCY_REQUESTS = 20
-TELNET_LATENCY_REQUESTS = 20
-TELNET_TIMEOUT = 10
+API_LATENCY_REQUESTS = 10
+TELNET_LATENCY_REQUESTS = 10
+TELNET_TIMEOUT = 15
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -1179,7 +1179,7 @@ def main():
 Examples:
   python3 run_platform_metrics.py --scales 50,100,250 --trials 10
   python3 run_platform_metrics.py --gns3-host 192.168.1.50 --scales 50,100 --trials 5
-  python3 run_platform_metrics.py --scales 50 --trials 1  # quick test
+  python3 run_platform_metrics.py --scales 5 --trials 1  # quick test
         """
     )
     parser.add_argument("--gns3-host", default=GNS3_HOST)
@@ -1207,7 +1207,7 @@ Examples:
         """Write to both stdout and a log file."""
         def __init__(self, filename):
             self.terminal = sys.stdout
-            self.log = open(filename, "w")
+            self.log = open(filename, "w", encoding="utf-8")
         def write(self, msg):
             self.terminal.write(msg)
             self.log.write(msg)
