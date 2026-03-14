@@ -1,0 +1,49 @@
+==============================================================================================================
+  FINAL RESULTS
+==============================================================================================================
+
+==============================================================================================================
+  BOOT TIME — 5 PLCs + 10 Workstations (21 total nodes)
+==============================================================================================================
+  Trials: 5/5
+  Total boot time:  55.1±1.3s
+  API calls:        72
+  Data transferred: 607.2 KB
+
+  Phase                     │    Duration (s) │    Data (KB)
+  ──────────────────────────────────────────────────────────
+  Project creation          │           0.0s │          0.9
+  Node creation & wiring    │       6.0±1.1s │        145.1
+  Node startup              │      40.9±0.7s │        227.6
+  Readiness                 │           0.0s │        116.8
+  Service config            │       8.1±0.3s │        116.8
+
+================================================================================
+  API & CONSOLE LATENCY — 5 PLCs + 10 WS
+================================================================================
+  GET /nodes (list all)
+    Mean: 8.6ms | Std: 2.2ms | Min: 3.3ms | Max: 14.3ms | p95: 12.7ms
+  GET /nodes/{id} (single)
+    Mean: 9.5ms | Std: 3.5ms | Min: 3.8ms | Max: 23.0ms | p95: 15.6ms
+  POST stop/start (action)
+    Mean: 6943.9ms | Std: 115.3ms | Min: 6669.6ms | Max: 7270.0ms | p95: 7157.2ms
+  Telnet command execution
+    Mean: 4.0ms | Std: 2.7ms | Min: 1.1ms | Max: 16.6ms | p95: 8.7ms
+
+================================================================================
+  DATA TRANSFER — 5 PLCs + 10 WS
+================================================================================
+  Boot phase:
+    Sent: 16.4 KB | Received: 590.8 KB | Total: 607.2 KB
+    Throughput: 11.0 KB/s over 55.1s
+  Active workflow:
+    Sent: 1.1 KB | Received: 243.1 KB | Total: 244.1 KB
+    Duration: 7.0s
+  Idle (scenario running, no interaction):
+    Near-zero — all simulated traffic stays within the GNS3 VM
+
+  Topology: 5 PLCs + SCADA + Historian (MariaDB) + Firewall + Web Server + FTP Server + Monitor WS + 10 Workstations
+  Workload: Modbus/TCP polling @1.0s, historian push @30s, monitor pull @30s
+  IT traffic: HTTP (5-30s random) + FTP (60-120s random) per workstation
+  Trials: 5/5 successful
+  Platform: GNS3 + Open vSwitch | Host: localhost:80
