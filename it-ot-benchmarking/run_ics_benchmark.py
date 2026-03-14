@@ -317,29 +317,88 @@ def ensure_templates(api, switch_template_name, switch_adapters):
 # TOPOLOGY BUILDER
 # ═══════════════════════════════════════════════════════════════════
 
+def compute_switch_plan(n_plcs, n_ws):
+    """
+    Plan how many switches are needed per side.
+    OVS: 99 ports (0-98). Port 0 = management. Usable: ports 1-98 = 98 ports.
+
+    IT-Switch-1: port1=firewall, port2=web, port3=ftp, port4=monitor,
+                 then uplinks to extra switches, then workstations.
+    Extra IT switches: port1=uplink, ports 2-98=workstations (97 each).
+
+    OT-Switch-1: port1=firewall, port2=SCADA, then uplinks, then PLCs.
+    Extra OT switches: port1=uplink, ports 2-98=PLCs (97 each).
+    """
+    MAX_PORT = 98  # highest usable port (1-indexed)
+    IT_FIXED = 4   # firewall, web, ftp, monitor
+    OT_FIXED = 2   # firewall, scada
+    EXTRA_CAP = MAX_PORT - 1  # 97 (port 1 = uplink, rest = nodes)
+
+    # IT side
+    it_extra = 0
+    while True:
+        cap_first = MAX_PORT - IT_FIXED - it_extra
+        cap_total = cap_first + it_extra * EXTRA_CAP
+        if cap_total >= n_ws or it_extra > 10:
+            break
+        it_extra += 1
+
+    # OT side
+    ot_extra = 0
+    while True:
+        cap_first = MAX_PORT - OT_FIXED - ot_extra
+        cap_total = cap_first + ot_extra * EXTRA_CAP
+        if cap_total >= n_plcs or ot_extra > 10:
+            break
+        ot_extra += 1
+
+    return {
+        "it_switches": 1 + it_extra,
+        "ot_switches": 1 + ot_extra,
+        "it_extra": it_extra,
+        "ot_extra": ot_extra,
+        "max_port": MAX_PORT,
+        "it_fixed": IT_FIXED,
+        "ot_fixed": OT_FIXED,
+        "extra_cap": EXTRA_CAP,
+    }
+
+
 def compute_layout(n_plcs, n_ws):
     """Compute (x,y) positions for all nodes."""
+    plan = compute_switch_plan(n_plcs, n_ws)
     pos = {}
-    # Core infrastructure in a column on the left
+
+    # Core infrastructure
     pos["Web-Server"] = (0, 0)
     pos["FTP-Server"] = (0, SPACING_Y)
     pos["Monitor-WS"] = (0, SPACING_Y * 2)
-    pos["IT-Switch"] = (SPACING_X * 2, SPACING_Y)
+    pos["IT-Switch-1"] = (SPACING_X * 2, SPACING_Y)
     pos["Firewall"] = (SPACING_X * 4, SPACING_Y)
     pos["Historian"] = (SPACING_X * 4, SPACING_Y * 3)
-    pos["OT-Switch"] = (SPACING_X * 6, SPACING_Y)
+    pos["OT-Switch-1"] = (SPACING_X * 6, SPACING_Y)
     pos["SCADA"] = (SPACING_X * 8, 0)
 
-    # Workstations in grid below IT switch
+    # Extra IT switches
+    for k in range(plan["it_extra"]):
+        name = f"IT-Switch-{k+2}"
+        pos[name] = (SPACING_X * 2, SPACING_Y * (3 + k))
+
+    # Extra OT switches
+    for k in range(plan["ot_extra"]):
+        name = f"OT-Switch-{k+2}"
+        pos[name] = (SPACING_X * 6, SPACING_Y * (3 + k))
+
+    # Workstations in grid below IT switches
     ws_x_start = -SPACING_X * 2
-    ws_y_start = SPACING_Y * 4
+    ws_y_start = SPACING_Y * (4 + max(plan["it_extra"], plan["ot_extra"]))
     for i in range(1, n_ws + 1):
         col = (i - 1) % GRID_COLS
         row = (i - 1) // GRID_COLS
         pos[f"WS-{i}"] = (ws_x_start + col * (SPACING_X // 2),
                            ws_y_start + row * (SPACING_Y // 2))
 
-    # PLCs in grid to the right of OT switch
+    # PLCs in grid to the right of OT switches
     plc_x_start = SPACING_X * 8
     plc_y_start = SPACING_Y * 2
     for i in range(1, n_plcs + 1):
@@ -352,11 +411,15 @@ def compute_layout(n_plcs, n_ws):
 
 
 def build_topology(api, project_id, templates, n_plcs, n_ws):
-    """Create all nodes and links. Returns dict of node info."""
+    """Create all nodes and links with multi-switch support. Returns dict of node info."""
+    plan = compute_switch_plan(n_plcs, n_ws)
     pos = compute_layout(n_plcs, n_ws)
     nodes = {}
 
-    # ── Create nodes ──
+    log(f"Switch plan: {plan['it_switches']} IT switch(es), "
+        f"{plan['ot_switches']} OT switch(es)")
+
+    # ── Create infrastructure nodes ──
     log("Creating infrastructure nodes...")
     for name, role in [("Web-Server", "webserver"), ("FTP-Server", "ftpserver"),
                        ("Monitor-WS", "workstation"), ("SCADA", "scada"),
@@ -365,13 +428,20 @@ def build_topology(api, project_id, templates, n_plcs, n_ws):
         n = api.create_node(project_id, templates[role], name, x, y)
         nodes[name] = n
 
-    # Switches
-    for name in ["IT-Switch", "OT-Switch"]:
+    # ── Create switches ──
+    for k in range(plan["it_switches"]):
+        name = f"IT-Switch-{k+1}"
         x, y = pos[name]
         n = api.create_node(project_id, templates["switch"], name, x, y)
         nodes[name] = n
 
-    # PLCs
+    for k in range(plan["ot_switches"]):
+        name = f"OT-Switch-{k+1}"
+        x, y = pos[name]
+        n = api.create_node(project_id, templates["switch"], name, x, y)
+        nodes[name] = n
+
+    # ── Create PLCs ──
     log(f"Creating {n_plcs} PLCs...")
     for i in range(1, n_plcs + 1):
         name = f"PLC-{i}"
@@ -381,7 +451,7 @@ def build_topology(api, project_id, templates, n_plcs, n_ws):
         if i % 20 == 0 or i == n_plcs:
             log_progress(i, n_plcs, "PLCs created")
 
-    # Workstations
+    # ── Create workstations ──
     log(f"Creating {n_ws} workstations...")
     for i in range(1, n_ws + 1):
         name = f"WS-{i}"
@@ -391,66 +461,129 @@ def build_topology(api, project_id, templates, n_plcs, n_ws):
         if i % 20 == 0 or i == n_ws:
             log_progress(i, n_ws, "workstations created")
 
-    # ── Wiring ──
-    it_sw = nodes["IT-Switch"]["node_id"]
-    ot_sw = nodes["OT-Switch"]["node_id"]
+    # ════════════════════════════════════════════════════════════════
+    # WIRING
+    # OVS port addressing: (adapter=PORT_NUM, port=0)
+    # Port 0 = management (skip). Data ports start at 1.
+    # ════════════════════════════════════════════════════════════════
+
     fw = nodes["Firewall"]["node_id"]
+    it_sw1 = nodes["IT-Switch-1"]["node_id"]
+    ot_sw1 = nodes["OT-Switch-1"]["node_id"]
 
+    # ── IT SIDE WIRING ──
     log("Wiring IT side...")
-    # OVS uses (adapter=PORT, port=0). Port 0 = management, skip it.
-    next_it_port = SWITCH_FIRST_DATA_PORT  # starts at 1
+    it1_port = SWITCH_FIRST_DATA_PORT  # starts at 1
 
-    # IT-Switch port 1 → Firewall adapter 0 (eth0 = IT interface)
-    api.create_link(project_id, it_sw, next_it_port, 0, fw, 0, 0)
-    next_it_port += 1
+    # IT-Switch-1 port 1 → Firewall eth0
+    api.create_link(project_id, it_sw1, it1_port, 0, fw, 0, 0)
+    it1_port += 1
 
-    # IT-Switch port 2 → Web Server
-    api.create_link(project_id, it_sw, next_it_port, 0,
+    # IT-Switch-1 port 2 → Web Server
+    api.create_link(project_id, it_sw1, it1_port, 0,
                     nodes["Web-Server"]["node_id"], 0, 0)
-    next_it_port += 1
+    it1_port += 1
 
-    # IT-Switch port 3 → FTP Server
-    api.create_link(project_id, it_sw, next_it_port, 0,
+    # IT-Switch-1 port 3 → FTP Server
+    api.create_link(project_id, it_sw1, it1_port, 0,
                     nodes["FTP-Server"]["node_id"], 0, 0)
-    next_it_port += 1
+    it1_port += 1
 
-    # IT-Switch port 4 → Monitor WS
-    api.create_link(project_id, it_sw, next_it_port, 0,
+    # IT-Switch-1 port 4 → Monitor WS
+    api.create_link(project_id, it_sw1, it1_port, 0,
                     nodes["Monitor-WS"]["node_id"], 0, 0)
-    next_it_port += 1
+    it1_port += 1
 
-    # IT-Switch ports 5..N → Workstations
+    # Connect extra IT switches to IT-Switch-1
+    extra_it_switches = []  # list of (switch_node_id, next_available_port)
+    for k in range(plan["it_extra"]):
+        extra_name = f"IT-Switch-{k+2}"
+        extra_id = nodes[extra_name]["node_id"]
+        # IT-Switch-1 port → extra switch port 1 (uplink)
+        api.create_link(project_id, it_sw1, it1_port, 0,
+                        extra_id, SWITCH_FIRST_DATA_PORT, 0)
+        it1_port += 1
+        # Extra switch starts assigning from port 2
+        extra_it_switches.append((extra_id, SWITCH_FIRST_DATA_PORT + 1))
+
+    # Distribute workstations across IT switches
+    # First fill remaining ports on IT-Switch-1, then overflow to extras
+    ws_wired = 0
     for i in range(1, n_ws + 1):
-        api.create_link(project_id, it_sw, next_it_port, 0,
-                        nodes[f"WS-{i}"]["node_id"], 0, 0)
-        next_it_port += 1
-        if i % 20 == 0 or i == n_ws:
-            log_progress(i, n_ws, "workstations wired")
+        if it1_port <= plan["max_port"]:
+            # Still have room on IT-Switch-1
+            api.create_link(project_id, it_sw1, it1_port, 0,
+                            nodes[f"WS-{i}"]["node_id"], 0, 0)
+            it1_port += 1
+        else:
+            # Overflow to extra switches
+            placed = False
+            for idx, (sw_id, sw_port) in enumerate(extra_it_switches):
+                if sw_port <= plan["max_port"]:
+                    api.create_link(project_id, sw_id, sw_port, 0,
+                                    nodes[f"WS-{i}"]["node_id"], 0, 0)
+                    extra_it_switches[idx] = (sw_id, sw_port + 1)
+                    placed = True
+                    break
+            if not placed:
+                log(f"ERROR: No port available for WS-{i}!", "ERROR")
+                break
 
+        ws_wired += 1
+        if ws_wired % 20 == 0 or ws_wired == n_ws:
+            log_progress(ws_wired, n_ws, "workstations wired")
+
+    # ── DMZ WIRING ──
     log("Wiring DMZ...")
-    # Firewall adapter 1 (eth1 = DMZ) → Historian
     api.create_link(project_id, fw, 1, 0,
                     nodes["Historian"]["node_id"], 0, 0)
 
+    # ── OT SIDE WIRING ──
     log("Wiring OT side...")
-    next_ot_port = SWITCH_FIRST_DATA_PORT
+    ot1_port = SWITCH_FIRST_DATA_PORT  # starts at 1
 
-    # OT-Switch port 1 → Firewall adapter 2 (eth2 = OT interface)
-    api.create_link(project_id, ot_sw, next_ot_port, 0, fw, 2, 0)
-    next_ot_port += 1
+    # OT-Switch-1 port 1 → Firewall eth2
+    api.create_link(project_id, ot_sw1, ot1_port, 0, fw, 2, 0)
+    ot1_port += 1
 
-    # OT-Switch port 2 → SCADA
-    api.create_link(project_id, ot_sw, next_ot_port, 0,
+    # OT-Switch-1 port 2 → SCADA
+    api.create_link(project_id, ot_sw1, ot1_port, 0,
                     nodes["SCADA"]["node_id"], 0, 0)
-    next_ot_port += 1
+    ot1_port += 1
 
-    # OT-Switch ports 3..N → PLCs
+    # Connect extra OT switches to OT-Switch-1
+    extra_ot_switches = []
+    for k in range(plan["ot_extra"]):
+        extra_name = f"OT-Switch-{k+2}"
+        extra_id = nodes[extra_name]["node_id"]
+        api.create_link(project_id, ot_sw1, ot1_port, 0,
+                        extra_id, SWITCH_FIRST_DATA_PORT, 0)
+        ot1_port += 1
+        extra_ot_switches.append((extra_id, SWITCH_FIRST_DATA_PORT + 1))
+
+    # Distribute PLCs across OT switches
+    plcs_wired = 0
     for i in range(1, n_plcs + 1):
-        api.create_link(project_id, ot_sw, next_ot_port, 0,
-                        nodes[f"PLC-{i}"]["node_id"], 0, 0)
-        next_ot_port += 1
-        if i % 20 == 0 or i == n_plcs:
-            log_progress(i, n_plcs, "PLCs wired")
+        if ot1_port <= plan["max_port"]:
+            api.create_link(project_id, ot_sw1, ot1_port, 0,
+                            nodes[f"PLC-{i}"]["node_id"], 0, 0)
+            ot1_port += 1
+        else:
+            placed = False
+            for idx, (sw_id, sw_port) in enumerate(extra_ot_switches):
+                if sw_port <= plan["max_port"]:
+                    api.create_link(project_id, sw_id, sw_port, 0,
+                                    nodes[f"PLC-{i}"]["node_id"], 0, 0)
+                    extra_ot_switches[idx] = (sw_id, sw_port + 1)
+                    placed = True
+                    break
+            if not placed:
+                log(f"ERROR: No port available for PLC-{i}!", "ERROR")
+                break
+
+        plcs_wired += 1
+        if plcs_wired % 20 == 0 or plcs_wired == n_plcs:
+            log_progress(plcs_wired, n_plcs, "PLCs wired")
 
     return nodes
 
@@ -765,6 +898,8 @@ def run_trial(api, templates, n_plcs, n_ws, trial_num, duration,
             result.total_boot_api_calls += phase.api_calls
 
         total_nodes = n_plcs + n_ws + 6  # PLCs + WSs + SCADA + FW + Historian + Web + FTP + Monitor
+        plan = compute_switch_plan(n_plcs, n_ws)
+        total_nodes += plan["it_switches"] + plan["ot_switches"]  # add switches
         log(f"Boot complete: {result.total_boot_time:.1f}s "
             f"({result.total_boot_api_calls} API calls, "
             f"{(result.total_boot_bytes_sent + result.total_boot_bytes_received) / 1024:.1f} KB, "
@@ -1016,7 +1151,9 @@ Examples:
 
     args = parser.parse_args()
     api = GNS3API(args.gns3_host, args.gns3_port)
-    total_nodes = args.n_plcs + args.n_workstations + 6
+    plan = compute_switch_plan(args.n_plcs, args.n_workstations)
+    total_nodes = (args.n_plcs + args.n_workstations + 6
+                   + plan["it_switches"] + plan["ot_switches"])
 
     # ── Logging to file ──
     label = args.label or args.gns3_host.replace(".", "_")
