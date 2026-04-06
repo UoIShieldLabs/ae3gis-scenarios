@@ -20,23 +20,17 @@
               "id": "61d062b4-8f42-4d64-b5d5-aceac5f9c429",
               "name": "Marketing Router",
               "type": "router",
-              "ip": "10.0.2.1",
+              "ip": "10.10.3.1",
               "kind": null,
-              "image": null,
-              "status": "stopped",
-              "metadata": null,
-              "persistencePaths": null
+              "status": "running"
             },
             {
               "id": "6d3a93cd-e34e-4830-9fa4-dc4e32ebe18f",
               "name": "Marketing Switch",
               "type": "switch",
-              "ip": "10.0.2.2",
+              "ip": "10.10.3.2",
               "kind": null,
-              "image": null,
-              "status": "stopped",
-              "metadata": null,
-              "persistencePaths": null
+              "status": "running"
             },
             {
               "id": "bbbb6740-8f83-4548-9e82-5937d7d3b693",
@@ -45,7 +39,7 @@
               "ip": "10.10.3.10",
               "kind": null,
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "marketing",
                 "DNS_SERVER": "10.10.1.12",
@@ -63,7 +57,7 @@
               "ip": "10.10.3.11",
               "kind": null,
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "marketing",
                 "DNS_SERVER": "10.10.1.12",
@@ -118,7 +112,7 @@
               "ip": "10.10.1.1",
               "kind": null,
               "image": null,
-              "status": "stopped",
+              "status": "running",
               "metadata": null,
               "persistencePaths": null
             },
@@ -129,7 +123,7 @@
               "ip": "10.10.1.2",
               "kind": null,
               "image": null,
-              "status": "stopped",
+              "status": "running",
               "metadata": null,
               "persistencePaths": null
             },
@@ -140,7 +134,7 @@
               "ip": "10.10.1.10",
               "kind": null,
               "image": "tollan/aegis-webserver",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "DB_SERVER": "10.10.5.22"
               },
@@ -153,7 +147,7 @@
               "ip": "10.10.1.11",
               "kind": null,
               "image": "tollan/aegis-webserver",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "DB_SERVER": "10.10.5.22"
               },
@@ -166,7 +160,7 @@
               "ip": "10.10.1.12",
               "kind": null,
               "image": "tollan/aegis-dns",
-              "status": "stopped",
+              "status": "running",
               "metadata": null,
               "persistencePaths": null
             },
@@ -177,7 +171,7 @@
               "ip": "10.10.1.13",
               "kind": null,
               "image": "tollan/aegis-ftp",
-              "status": "stopped",
+              "status": "running",
               "metadata": null,
               "persistencePaths": null
             }
@@ -243,7 +237,7 @@
               "ip": "10.10.2.1",
               "kind": null,
               "image": null,
-              "status": "stopped",
+              "status": "running",
               "metadata": null,
               "persistencePaths": null
             },
@@ -254,7 +248,7 @@
               "ip": "10.10.2.2",
               "kind": null,
               "image": null,
-              "status": "stopped",
+              "status": "running",
               "metadata": null,
               "persistencePaths": null
             },
@@ -265,7 +259,7 @@
               "ip": "10.10.2.10",
               "kind": null,
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "hr",
                 "DNS_SERVER": "10.10.1.12",
@@ -283,7 +277,7 @@
               "ip": "10.10.2.11",
               "kind": null,
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "hr",
                 "DNS_SERVER": "10.10.1.12",
@@ -301,7 +295,7 @@
               "ip": "10.10.2.12",
               "kind": null,
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "hr",
                 "DNS_SERVER": "10.10.1.12",
@@ -319,7 +313,7 @@
               "ip": "10.10.2.13",
               "kind": null,
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "hr",
                 "DNS_SERVER": "10.10.1.12",
@@ -390,14 +384,14 @@
               "name": "Engineering Router",
               "type": "router",
               "ip": "10.10.4.1",
-              "status": "stopped"
+              "status": "running"
             },
             {
               "id": "d25f975a-a16a-4038-8fe6-62d4a0ec23d7",
               "name": "Engineering Switch",
               "type": "switch",
               "ip": "10.10.4.2",
-              "status": "stopped"
+              "status": "running"
             },
             {
               "id": "983c3623-f070-45d8-a59a-58b6e3fc40cb",
@@ -405,7 +399,7 @@
               "type": "workstation",
               "ip": "10.10.4.10",
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "engineering",
                 "DNS_SERVER": "10.10.1.12",
@@ -422,7 +416,7 @@
               "type": "workstation",
               "ip": "10.10.4.11",
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "engineering",
                 "DNS_SERVER": "10.10.1.12",
@@ -439,7 +433,7 @@
               "type": "workstation",
               "ip": "10.10.4.12",
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "engineering",
                 "DNS_SERVER": "10.10.1.12",
@@ -481,14 +475,14 @@
               "name": "IT Router",
               "type": "router",
               "ip": "10.10.5.1",
-              "status": "stopped"
+              "status": "running"
             },
             {
               "id": "b8cee119-27d0-4b8e-9317-ef00757b1381",
               "name": "IT Switch",
               "type": "switch",
               "ip": "10.10.5.2",
-              "status": "stopped"
+              "status": "running"
             },
             {
               "id": "bd792a2a-4751-4fe5-90da-63dd8b244373",
@@ -496,7 +490,7 @@
               "type": "workstation",
               "ip": "10.10.5.10",
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "it",
                 "DNS_SERVER": "10.10.1.12",
@@ -515,7 +509,7 @@
               "type": "workstation",
               "ip": "10.10.5.11",
               "image": "tollan/aegis-workstation",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "ROLE": "it",
                 "DNS_SERVER": "10.10.1.12",
@@ -534,7 +528,7 @@
               "type": "web-server",
               "ip": "10.10.5.20",
               "image": "tollan/aegis-webserver",
-              "status": "stopped",
+              "status": "running",
               "metadata": {
                 "DB_SERVER": "10.10.5.22"
               }
@@ -545,7 +539,7 @@
               "type": "file-server",
               "ip": "10.10.5.21",
               "image": "tollan/aegis-ftp",
-              "status": "stopped"
+              "status": "running"
             },
             {
               "id": "6042e514-07be-44bf-9886-41b5558caf1d",
@@ -553,7 +547,7 @@
               "type": "file-server",
               "ip": "10.10.5.22",
               "image": "tollan/aegis-database",
-              "status": "stopped"
+              "status": "running"
             }
           ],
           "connections": [
@@ -586,7 +580,7 @@
         {
           "id": "934310e9-72ec-4708-943f-b98b6ab071ff",
           "name": "Core",
-          "cidr": "10.10.0.0/24",
+          "cidr": "10.10.0.0/16",
           "gateway": "10.10.0.1",
           "containers": [
             {
@@ -594,14 +588,17 @@
               "name": "Core Router",
               "type": "router",
               "ip": "10.10.0.1",
-              "status": "stopped"
+              "status": "running",
+              "persistencePaths": [
+                "/etc/frr"
+              ]
             },
             {
               "id": "b9df97e0-8ebe-4bed-a455-4ddbac242a55",
               "name": "Core Switch",
               "type": "switch",
               "ip": "10.10.0.2",
-              "status": "stopped"
+              "status": "running"
             },
             {
               "id": "31c8cb33-4373-42cd-8b98-b145ba0bbaac",
@@ -611,7 +608,7 @@
               "image": "tollan/aegis-zeek",
               "status": "stopped",
               "metadata": {
-                "ZEEK_INTERFACE": "eth0"
+                "ZEEK_INTERFACE": "eth1"
               }
             }
           ],
