@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Turbine Simulator</title>
+  </head>
+  <body>
+
+    <h2>Wind Control</h2>
+    Manual Control:
+    <input id="wind_input" type="number" step="0.1">
+    <button onclick="setWind()">Set</button>
+    <br><br>
+
+    File Control:
+    <input type="file" id="file">
+    <button onclick="upload()">Upload</button>
+    <br><br>
+
+    <h2>Simulator State</h2>
+    Wind: <span id="wind_speed">0</span><br>
+    Gen Torque SP: <span id="gen_torque_setpoint">0</span><br>
+    Gen Torque Real: <span id="gen_torque_real">0</span><br>
+    Pitch SP: <span id="pitch_setpoint">0</span><br>
+    Pitch Real: <span id="pitch_real">0</span><br>
+    Generator Power: <span id="generator_power">0</span><br>
+    Rotor Speed: <span id="rotor_speed">0</span><br>
+    Generator Speed: <span id="gen_speed">0</span><br>
+    TSR: <span id="tsr">0</span><br>
+
+      <hr>
+
+      <h2>Simulation Plots</h2>
+      <button onclick="generatePlot()">
+        Generate Plot
+      </button>
+
+      <button id="download_btn" onclick="downloadPlot()" disabled>
+        Download Plot
+      </button>
+      <br><br>
+
+      <img id="plot_image" width="100%">
+
+    <script src="{{ url_for('static', filename='sim_js.js') }}"></script>
+  </body>
+</html>
