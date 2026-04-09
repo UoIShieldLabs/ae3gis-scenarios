@@ -1,0 +1,663 @@
+{
+  "name": null,
+  "sites": [
+    {
+      "id": "39818cdc-86f8-4816-a5e2-5ab72a39af58",
+      "name": "IT",
+      "location": "",
+      "position": {
+        "x": -1.7189582612687673,
+        "y": 106.56195067902472
+      },
+      "subnets": [
+        {
+          "id": "5b745f4d-4083-415a-a5c7-99643c1106e1",
+          "name": "Marketing",
+          "cidr": "10.10.3.0/24",
+          "gateway": "10.0.2.1",
+          "containers": [
+            {
+              "id": "61d062b4-8f42-4d64-b5d5-aceac5f9c429",
+              "name": "Marketing Router",
+              "type": "router",
+              "ip": "10.10.3.1",
+              "kind": null,
+              "status": "running"
+            },
+            {
+              "id": "6d3a93cd-e34e-4830-9fa4-dc4e32ebe18f",
+              "name": "Marketing Switch",
+              "type": "switch",
+              "ip": "10.10.3.2",
+              "kind": null,
+              "status": "running"
+            },
+            {
+              "id": "bbbb6740-8f83-4548-9e82-5937d7d3b693",
+              "name": "Marketing WS 1",
+              "type": "workstation",
+              "ip": "10.10.3.10",
+              "kind": null,
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "marketing",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21"
+              },
+              "persistencePaths": null
+            },
+            {
+              "id": "1efc7d78-e741-4627-9a16-65cbd8f03457",
+              "name": "Marketing WS 2",
+              "type": "workstation",
+              "ip": "10.10.3.11",
+              "kind": null,
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "marketing",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21"
+              },
+              "persistencePaths": null
+            }
+          ],
+          "connections": [
+            {
+              "from": "6d3a93cd-e34e-4830-9fa4-dc4e32ebe18f",
+              "to": "61d062b4-8f42-4d64-b5d5-aceac5f9c429",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "6d3a93cd-e34e-4830-9fa4-dc4e32ebe18f",
+              "to": "bbbb6740-8f83-4548-9e82-5937d7d3b693",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "6d3a93cd-e34e-4830-9fa4-dc4e32ebe18f",
+              "to": "1efc7d78-e741-4627-9a16-65cbd8f03457",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            }
+          ]
+        },
+        {
+          "id": "5038c57d-280b-4e1e-a25c-51c7c422e404",
+          "name": "DMZ",
+          "cidr": "10.10.1.0/24",
+          "gateway": "10.10.1.1",
+          "containers": [
+            {
+              "id": "f658d089-1caf-4d6e-8e63-1a45bd5f6274",
+              "name": "DMZ Router",
+              "type": "router",
+              "ip": "10.10.1.1",
+              "kind": null,
+              "image": null,
+              "status": "running",
+              "metadata": null,
+              "persistencePaths": null
+            },
+            {
+              "id": "ba7278b6-437d-47c4-8baa-a479443900fc",
+              "name": "DMZ Switch",
+              "type": "switch",
+              "ip": "10.10.1.2",
+              "kind": null,
+              "image": null,
+              "status": "running",
+              "metadata": null,
+              "persistencePaths": null
+            },
+            {
+              "id": "0c2a1497-5e2e-45cc-9760-8ac3d538bec7",
+              "name": "Webserver_1",
+              "type": "web-server",
+              "ip": "10.10.1.10",
+              "kind": null,
+              "image": "tollan/aegis-webserver",
+              "status": "running",
+              "metadata": {
+                "DB_SERVER": "10.10.5.22"
+              },
+              "persistencePaths": null
+            },
+            {
+              "id": "a9f44d00-9d2b-4449-a36f-8d380e578e7e",
+              "name": "Webserver_2",
+              "type": "web-server",
+              "ip": "10.10.1.11",
+              "kind": null,
+              "image": "tollan/aegis-webserver",
+              "status": "running",
+              "metadata": {
+                "DB_SERVER": "10.10.5.22"
+              },
+              "persistencePaths": null
+            },
+            {
+              "id": "8aec4491-a2d7-4a83-910c-e9f9cc1c0274",
+              "name": "DNS",
+              "type": "web-server",
+              "ip": "10.10.1.12",
+              "kind": null,
+              "image": "tollan/aegis-dns",
+              "status": "running",
+              "metadata": null,
+              "persistencePaths": null
+            },
+            {
+              "id": "8f550efc-5a26-4f04-8b01-e8d7487f9ff0",
+              "name": "External File Server",
+              "type": "file-server",
+              "ip": "10.10.1.13",
+              "kind": null,
+              "image": "tollan/aegis-ftp",
+              "status": "running",
+              "metadata": null,
+              "persistencePaths": null
+            }
+          ],
+          "connections": [
+            {
+              "from": "ba7278b6-437d-47c4-8baa-a479443900fc",
+              "to": "f658d089-1caf-4d6e-8e63-1a45bd5f6274",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "ba7278b6-437d-47c4-8baa-a479443900fc",
+              "to": "0c2a1497-5e2e-45cc-9760-8ac3d538bec7",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "ba7278b6-437d-47c4-8baa-a479443900fc",
+              "to": "a9f44d00-9d2b-4449-a36f-8d380e578e7e",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "ba7278b6-437d-47c4-8baa-a479443900fc",
+              "to": "8aec4491-a2d7-4a83-910c-e9f9cc1c0274",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "ba7278b6-437d-47c4-8baa-a479443900fc",
+              "to": "8f550efc-5a26-4f04-8b01-e8d7487f9ff0",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            }
+          ]
+        },
+        {
+          "id": "8221e8cb-e5ea-4d4c-a141-feae08a049c1",
+          "name": "HR",
+          "cidr": "10.10.2.0/24",
+          "gateway": "10.10.2.1",
+          "containers": [
+            {
+              "id": "dafeb567-2c54-4535-b57c-f999efd42cd4",
+              "name": "HR Router",
+              "type": "router",
+              "ip": "10.10.2.1",
+              "kind": null,
+              "image": null,
+              "status": "running",
+              "metadata": null,
+              "persistencePaths": null
+            },
+            {
+              "id": "52edfc61-9794-4562-8c50-381969a19938",
+              "name": "HR Switch",
+              "type": "switch",
+              "ip": "10.10.2.2",
+              "kind": null,
+              "image": null,
+              "status": "running",
+              "metadata": null,
+              "persistencePaths": null
+            },
+            {
+              "id": "c29d65ba-4899-4be8-ae02-202c5e7b0c36",
+              "name": "HR WS 1",
+              "type": "workstation",
+              "ip": "10.10.2.10",
+              "kind": null,
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "hr",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21"
+              },
+              "persistencePaths": null
+            },
+            {
+              "id": "e869f627-d47f-4476-953e-d21d9e32d3a8",
+              "name": "HR WS 2",
+              "type": "workstation",
+              "ip": "10.10.2.11",
+              "kind": null,
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "hr",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21"
+              },
+              "persistencePaths": null
+            },
+            {
+              "id": "129e2874-4fdb-44ce-afdc-7086413bd0de",
+              "name": "HR WS 3",
+              "type": "workstation",
+              "ip": "10.10.2.12",
+              "kind": null,
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "hr",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21"
+              },
+              "persistencePaths": null
+            },
+            {
+              "id": "2e366536-3961-4752-b98d-deafaadda553",
+              "name": "HR WS 4",
+              "type": "workstation",
+              "ip": "10.10.2.13",
+              "kind": null,
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "hr",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21"
+              },
+              "persistencePaths": null
+            }
+          ],
+          "connections": [
+            {
+              "from": "52edfc61-9794-4562-8c50-381969a19938",
+              "to": "dafeb567-2c54-4535-b57c-f999efd42cd4",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "52edfc61-9794-4562-8c50-381969a19938",
+              "to": "c29d65ba-4899-4be8-ae02-202c5e7b0c36",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "52edfc61-9794-4562-8c50-381969a19938",
+              "to": "e869f627-d47f-4476-953e-d21d9e32d3a8",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "52edfc61-9794-4562-8c50-381969a19938",
+              "to": "129e2874-4fdb-44ce-afdc-7086413bd0de",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "52edfc61-9794-4562-8c50-381969a19938",
+              "to": "2e366536-3961-4752-b98d-deafaadda553",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            }
+          ]
+        },
+        {
+          "id": "20aec819-9c0a-4884-b571-e7f4708e0169",
+          "name": "Engineering",
+          "cidr": "10.10.4.0/24",
+          "gateway": "10.10.4.1",
+          "containers": [
+            {
+              "id": "e027b645-272b-4403-b4ec-a77781f6c0ca",
+              "name": "Engineering Router",
+              "type": "router",
+              "ip": "10.10.4.1",
+              "status": "running"
+            },
+            {
+              "id": "d25f975a-a16a-4038-8fe6-62d4a0ec23d7",
+              "name": "Engineering Switch",
+              "type": "switch",
+              "ip": "10.10.4.2",
+              "status": "running"
+            },
+            {
+              "id": "983c3623-f070-45d8-a59a-58b6e3fc40cb",
+              "name": "WS_1",
+              "type": "workstation",
+              "ip": "10.10.4.10",
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "engineering",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21",
+                "EXTERNAL_FTP": "10.10.1.13"
+              }
+            },
+            {
+              "id": "c8037518-97b4-4c17-a213-fa5952cdf7fd",
+              "name": "WS_2",
+              "type": "workstation",
+              "ip": "10.10.4.11",
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "engineering",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21",
+                "EXTERNAL_FTP": "10.10.1.13"
+              }
+            },
+            {
+              "id": "b0c019da-63d1-4b97-8973-62eee2ffdc70",
+              "name": "WS_3",
+              "type": "workstation",
+              "ip": "10.10.4.12",
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "engineering",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21",
+                "EXTERNAL_FTP": "10.10.1.13"
+              }
+            }
+          ],
+          "connections": [
+            {
+              "from": "d25f975a-a16a-4038-8fe6-62d4a0ec23d7",
+              "to": "e027b645-272b-4403-b4ec-a77781f6c0ca"
+            },
+            {
+              "from": "d25f975a-a16a-4038-8fe6-62d4a0ec23d7",
+              "to": "983c3623-f070-45d8-a59a-58b6e3fc40cb"
+            },
+            {
+              "from": "d25f975a-a16a-4038-8fe6-62d4a0ec23d7",
+              "to": "c8037518-97b4-4c17-a213-fa5952cdf7fd"
+            },
+            {
+              "from": "d25f975a-a16a-4038-8fe6-62d4a0ec23d7",
+              "to": "b0c019da-63d1-4b97-8973-62eee2ffdc70"
+            }
+          ]
+        },
+        {
+          "id": "0c503bdf-f147-4e9f-a595-0b91297cbc07",
+          "name": "IT",
+          "cidr": "10.10.5.0/24",
+          "gateway": "10.10.5.1",
+          "containers": [
+            {
+              "id": "e63842a8-51a6-4645-97ae-696595805a39",
+              "name": "IT Router",
+              "type": "router",
+              "ip": "10.10.5.1",
+              "status": "running"
+            },
+            {
+              "id": "b8cee119-27d0-4b8e-9317-ef00757b1381",
+              "name": "IT Switch",
+              "type": "switch",
+              "ip": "10.10.5.2",
+              "status": "running"
+            },
+            {
+              "id": "bd792a2a-4751-4fe5-90da-63dd8b244373",
+              "name": "IT WS1",
+              "type": "workstation",
+              "ip": "10.10.5.10",
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "it",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21",
+                "EXTERNAL_FTP": "10.10.1.13",
+                "DB_SERVER": "10.10.5.22",
+                "SSH_TARGETS": "10.10.1.10,10.10.1.11,10.10.1.12,10.10.1.13,10.10.5.20,10.10.5.21,10.10.5.22"
+              }
+            },
+            {
+              "id": "01727888-5ab9-494d-90cb-db43aaf6acc7",
+              "name": "IT WS2",
+              "type": "workstation",
+              "ip": "10.10.5.11",
+              "image": "tollan/aegis-workstation",
+              "status": "running",
+              "metadata": {
+                "ROLE": "it",
+                "DNS_SERVER": "10.10.1.12",
+                "WEBSERVER_1": "10.10.1.10",
+                "WEBSERVER_2": "10.10.1.11",
+                "INTERNAL_WEB": "10.10.5.20",
+                "INTERNAL_FTP": "10.10.5.21",
+                "EXTERNAL_FTP": "10.10.1.13",
+                "DB_SERVER": "10.10.5.22",
+                "SSH_TARGETS": "10.10.1.10,10.10.1.11,10.10.1.12,10.10.1.13,10.10.5.20,10.10.5.21,10.10.5.22"
+              }
+            },
+            {
+              "id": "63dd860c-7230-489f-a690-b77b523272e1",
+              "name": "Internal Web Server",
+              "type": "web-server",
+              "ip": "10.10.5.20",
+              "image": "tollan/aegis-webserver",
+              "status": "running",
+              "metadata": {
+                "DB_SERVER": "10.10.5.22"
+              }
+            },
+            {
+              "id": "f1b98e6e-7262-40c1-b05a-11584b7feaa2",
+              "name": "Internal File Server",
+              "type": "file-server",
+              "ip": "10.10.5.21",
+              "image": "tollan/aegis-ftp",
+              "status": "running"
+            },
+            {
+              "id": "6042e514-07be-44bf-9886-41b5558caf1d",
+              "name": "Database Server",
+              "type": "file-server",
+              "ip": "10.10.5.22",
+              "image": "tollan/aegis-database",
+              "status": "running"
+            }
+          ],
+          "connections": [
+            {
+              "from": "b8cee119-27d0-4b8e-9317-ef00757b1381",
+              "to": "e63842a8-51a6-4645-97ae-696595805a39"
+            },
+            {
+              "from": "b8cee119-27d0-4b8e-9317-ef00757b1381",
+              "to": "bd792a2a-4751-4fe5-90da-63dd8b244373"
+            },
+            {
+              "from": "b8cee119-27d0-4b8e-9317-ef00757b1381",
+              "to": "01727888-5ab9-494d-90cb-db43aaf6acc7"
+            },
+            {
+              "from": "b8cee119-27d0-4b8e-9317-ef00757b1381",
+              "to": "63dd860c-7230-489f-a690-b77b523272e1"
+            },
+            {
+              "from": "b8cee119-27d0-4b8e-9317-ef00757b1381",
+              "to": "f1b98e6e-7262-40c1-b05a-11584b7feaa2"
+            },
+            {
+              "from": "b8cee119-27d0-4b8e-9317-ef00757b1381",
+              "to": "6042e514-07be-44bf-9886-41b5558caf1d"
+            }
+          ]
+        },
+        {
+          "id": "934310e9-72ec-4708-943f-b98b6ab071ff",
+          "name": "Core",
+          "cidr": "10.10.0.0/16",
+          "gateway": "10.10.0.1",
+          "containers": [
+            {
+              "id": "ef0d3108-fbcf-4051-b05c-51354dabd795",
+              "name": "Core Router",
+              "type": "router",
+              "ip": "10.10.0.1",
+              "status": "running",
+              "persistencePaths": [
+                "/etc/frr"
+              ]
+            },
+            {
+              "id": "b9df97e0-8ebe-4bed-a455-4ddbac242a55",
+              "name": "Core Switch",
+              "type": "switch",
+              "ip": "10.10.0.2",
+              "status": "running"
+            },
+            {
+              "id": "31c8cb33-4373-42cd-8b98-b145ba0bbaac",
+              "name": "Zeek",
+              "type": "workstation",
+              "ip": "10.10.0.10",
+              "image": "tollan/aegis-zeek",
+              "status": "stopped",
+              "metadata": {
+                "ZEEK_INTERFACE": "eth1"
+              }
+            }
+          ],
+          "connections": [
+            {
+              "from": "b9df97e0-8ebe-4bed-a455-4ddbac242a55",
+              "to": "ef0d3108-fbcf-4051-b05c-51354dabd795"
+            },
+            {
+              "from": "b9df97e0-8ebe-4bed-a455-4ddbac242a55",
+              "to": "31c8cb33-4373-42cd-8b98-b145ba0bbaac"
+            }
+          ]
+        }
+      ],
+      "subnetConnections": [
+        {
+          "from": "934310e9-72ec-4708-943f-b98b6ab071ff",
+          "to": "5038c57d-280b-4e1e-a25c-51c7c422e404",
+          "fromContainer": "ef0d3108-fbcf-4051-b05c-51354dabd795",
+          "toContainer": "f658d089-1caf-4d6e-8e63-1a45bd5f6274"
+        },
+        {
+          "from": "934310e9-72ec-4708-943f-b98b6ab071ff",
+          "to": "5b745f4d-4083-415a-a5c7-99643c1106e1",
+          "fromContainer": "ef0d3108-fbcf-4051-b05c-51354dabd795",
+          "toContainer": "61d062b4-8f42-4d64-b5d5-aceac5f9c429"
+        },
+        {
+          "from": "934310e9-72ec-4708-943f-b98b6ab071ff",
+          "to": "8221e8cb-e5ea-4d4c-a141-feae08a049c1",
+          "fromContainer": "ef0d3108-fbcf-4051-b05c-51354dabd795",
+          "toContainer": "dafeb567-2c54-4535-b57c-f999efd42cd4"
+        },
+        {
+          "from": "934310e9-72ec-4708-943f-b98b6ab071ff",
+          "to": "20aec819-9c0a-4884-b571-e7f4708e0169",
+          "fromContainer": "ef0d3108-fbcf-4051-b05c-51354dabd795",
+          "toContainer": "e027b645-272b-4403-b4ec-a77781f6c0ca"
+        },
+        {
+          "from": "934310e9-72ec-4708-943f-b98b6ab071ff",
+          "to": "0c503bdf-f147-4e9f-a595-0b91297cbc07",
+          "fromContainer": "ef0d3108-fbcf-4051-b05c-51354dabd795",
+          "toContainer": "e63842a8-51a6-4645-97ae-696595805a39"
+        }
+      ]
+    }
+  ],
+  "siteConnections": [],
+  "scenarios": null
+}
