@@ -129,6 +129,30 @@ class CpLookup:
       plt.grid()
       plt.show()
 
+    def plot_cp_vs_pitch(self, tsr_list=None):
+      if tsr_list is None:
+          tsr_list = [7.86]
+
+      plt.figure()
+      for tsr in tsr_list:
+          cp_vals = []
+          for pitch in self.pitch:
+              cp_vals.append(
+                  self.get_cp(pitch,tsr)
+              )
+          plt.plot(
+              self.pitch,
+              cp_vals,
+              label=f"TSR {tsr}"
+          )
+
+      plt.xlabel("Pitch (deg)")
+      plt.ylabel("Cp")
+      plt.title("NREL 5MW Cp Curves")
+      plt.legend()
+      plt.grid()
+      plt.show()
+
 ## Wind Data Functions
 def get_wind_list(setpoints, ramp_rate, dt):
     total_duration = 0    
@@ -292,7 +316,7 @@ def w_gen_func(w_rotor, gbr, gbr_eff):
 
 def P_gen_func(T_gen, w_gen, gen_eff, engaged:bool):
   '''
-  Calculates the rotational velocity of the generator.
+  Calculates the electric power of the generator.
 
   Inputs:
   T_gen     Generator torque <- Control Variable    (Nm)

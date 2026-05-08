@@ -22,6 +22,7 @@
               "type": "router",
               "ip": "172.16.20.1",
               "kind": null,
+              "image": null,
               "status": "stopped",
               "metadata": {
                 "LAN_NW": "10.10.0.0/16",
@@ -29,12 +30,15 @@
                 "WEB_1": "172.16.20.10",
                 "WEB_2": "172.16.20.11",
                 "DNS": "172.16.20.12",
-                "FTP": "172.16.20.13",
                 "DB": "10.10.5.22",
                 "IT_NET": "10.10.5.0/24",
                 "DMZ_NET": "172.16.20.0/24",
-                "CORE_NET": "10.10.0.0/16"
-              }
+                "CORE_NET": "10.10.0.0/16",
+                "FTP": "172.16.20.13",
+                "FTP_2": "172.16.20.14",
+                "FTP_PORTS": "40000:40010"
+              },
+              "persistencePaths": null
             },
             {
               "id": "ba7278b6-437d-47c4-8baa-a479443900fc",
@@ -90,6 +94,17 @@
               "type": "file-server",
               "ip": "172.16.20.13",
               "kind": null,
+              "image": "tollan/aegis-ftp:v0.2",
+              "status": "stopped",
+              "metadata": null,
+              "persistencePaths": null
+            },
+            {
+              "id": "8c9d0fb3-ae86-48eb-8d98-53151fd7ad86",
+              "name": "Engr FS",
+              "type": "file-server",
+              "ip": "172.16.20.14",
+              "kind": null,
               "image": "tollan/aegis-ftp",
               "status": "stopped",
               "metadata": null,
@@ -136,6 +151,15 @@
             {
               "from": "ba7278b6-437d-47c4-8baa-a479443900fc",
               "to": "8f550efc-5a26-4f04-8b01-e8d7487f9ff0",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "ba7278b6-437d-47c4-8baa-a479443900fc",
+              "to": "8c9d0fb3-ae86-48eb-8d98-53151fd7ad86",
               "label": null,
               "fromInterface": null,
               "toInterface": null,
@@ -437,7 +461,8 @@
                 "WEBSERVER_2": "172.16.20.11",
                 "INTERNAL_WEB": "10.10.5.20",
                 "INTERNAL_FTP": "10.10.5.21",
-                "EXTERNAL_FTP": "172.16.20.13"
+                "EXTERNAL_FTP": "172.16.20.13",
+                "FTP_SERVER": "172.16.20.14"
               },
               "persistencePaths": null
             },
@@ -478,6 +503,19 @@
                 "EXTERNAL_FTP": "172.16.20.13"
               },
               "persistencePaths": null
+            },
+            {
+              "id": "8f13f0dc-8339-44c8-93f1-c9fc1b502d27",
+              "name": "EWS",
+              "type": "workstation",
+              "ip": "10.10.4.3",
+              "kind": null,
+              "image": "huntersquires/ae3gis_ot_jumpbox:v1.0",
+              "status": "stopped",
+              "metadata": {
+                "EXTERNAL_FTP": "172.16.20.13"
+              },
+              "persistencePaths": null
             }
           ],
           "connections": [
@@ -511,6 +549,15 @@
             {
               "from": "d25f975a-a16a-4038-8fe6-62d4a0ec23d7",
               "to": "b0c019da-63d1-4b97-8973-62eee2ffdc70",
+              "label": null,
+              "fromInterface": null,
+              "toInterface": null,
+              "fromContainer": null,
+              "toContainer": null
+            },
+            {
+              "from": "d25f975a-a16a-4038-8fe6-62d4a0ec23d7",
+              "to": "8f13f0dc-8339-44c8-93f1-c9fc1b502d27",
               "label": null,
               "fromInterface": null,
               "toInterface": null,
@@ -610,7 +657,7 @@
               "type": "file-server",
               "ip": "10.10.5.21",
               "kind": null,
-              "image": "tollan/aegis-ftp",
+              "image": "tollan/aegis-ftp:v0.2",
               "status": "stopped",
               "metadata": null,
               "persistencePaths": null
@@ -696,6 +743,7 @@
               "type": "router",
               "ip": "10.10.0.1",
               "kind": null,
+              "image": null,
               "status": "stopped",
               "metadata": {
                 "UPSTREAM_RTR": "172.16.20.0/24",
@@ -704,7 +752,8 @@
                 "DB": "10.10.5.22",
                 "CORE_NET": "10.10.0.0/16",
                 "ENGR_NET": "10.10.4.0/24",
-                "OT_DMZ_NET": "10.10.6.0/24"
+                "OT_DMZ_NET": "10.10.6.0/24",
+                "IT_NET": "10.10.5.0/24"
               },
               "persistencePaths": [
                 "/etc/frr"
@@ -829,11 +878,13 @@
               "type": "router",
               "ip": "10.0.0.1",
               "kind": null,
+              "image": null,
               "status": "stopped",
               "metadata": {
                 "OT_JUMP": "10.10.6.3",
                 "OT_NET": "10.0.0.0/24"
-              }
+              },
+              "persistencePaths": null
             },
             {
               "id": "9a5dff24-9800-4927-9190-701081ca69a0",
@@ -854,7 +905,10 @@
               "kind": null,
               "image": "huntersquires/ae3gis_windturbine_plc:v1.3",
               "status": "stopped",
-              "metadata": null,
+              "metadata": {
+                "SIM_IP": "10.0.0.5",
+                "SIM_PORT": "5555"
+              },
               "persistencePaths": null
             },
             {
@@ -874,7 +928,7 @@
               "type": "plc",
               "ip": "10.0.0.5",
               "kind": null,
-              "image": "huntersquires/ae3gis_windturbine_sim:v1.2",
+              "image": "huntersquires/ae3gis_windturbine_sim:v1.3",
               "status": "stopped",
               "metadata": null,
               "persistencePaths": null
@@ -1082,14 +1136,15 @@
             },
             {
               "id": "d66184d1-ff94-47cc-a6b2-7941e9a9cc48",
-              "name": "Workstation 1",
+              "name": "Attacker",
               "type": "workstation",
               "ip": "172.16.10.3",
               "kind": null,
-              "image": "tollan/aegis-workstation",
+              "image": "huntersquires/ae3gis_attacker:v1.0",
               "status": "stopped",
               "metadata": {
-                "ROLE": "adversary"
+                "FTP_SERVER": "172.16.20.14",
+                "SIMULATOR": "10.0.0.5"
               },
               "persistencePaths": null
             }
@@ -1197,15 +1252,83 @@
             },
             {
               "containerId": "f658d089-1caf-4d6e-8e63-1a45bd5f6274",
-              "script": "/scripts/router/WindFarm-router/DMZ_fw.sh"
+              "script": "/scripts/router/WindFarm-router/DMZ_fw.sh",
+              "args": null
             },
             {
               "containerId": "ef0d3108-fbcf-4051-b05c-51354dabd795",
-              "script": "/scripts/router/WindFarm-router/CORE_fw.sh"
+              "script": "/scripts/router/WindFarm-router/CORE_fw.sh",
+              "args": null
             },
             {
               "containerId": "4e0edf74-d09c-4394-89ce-f1847a4f456c",
-              "script": "/scripts/router/WindFarm-router/OT_fw.sh"
+              "script": "/scripts/router/WindFarm-router/OT_fw.sh",
+              "args": null
+            }
+          ]
+        },
+        {
+          "id": "64c11a0a-c3ef-4958-b2f3-5a883a686bb7",
+          "name": "Initial Access",
+          "description": "Attacker uploads a malicious script to external FTP server, Engr workstation downloads and runs the install script thinking it's an update from their SCADA software provider.",
+          "executions": [
+            {
+              "containerId": "d66184d1-ff94-47cc-a6b2-7941e9a9cc48",
+              "script": "/scripts/workstation/WindFarm-workstation/phase1_Atk-upload_scada.sh",
+              "args": null
+            },
+            {
+              "containerId": "983c3623-f070-45d8-a59a-58b6e3fc40cb",
+              "script": "/scripts/workstation/WindFarm-workstation/phase1_Engr-download_scada.sh",
+              "args": null
+            }
+          ]
+        },
+        {
+          "id": "a272ec86-9c23-4f34-a9ce-7e2f9d203bc3",
+          "name": "Reconnaissance",
+          "description": "Engr workstation runs the install.sh script, which scans the network and sends a report back to the attacker over a reverseTCP shell.",
+          "executions": [
+            {
+              "containerId": "983c3623-f070-45d8-a59a-58b6e3fc40cb",
+              "script": "/scripts/workstation/WindFarm-workstation/phase2_Engr-run_script.sh",
+              "args": null
+            }
+          ]
+        },
+        {
+          "id": "8aeb235f-5830-4393-90d1-ea1d575b6d9f",
+          "name": "Lateral Movement",
+          "description": "The attacker uses the engineering workstation to pivot into the OT DMZ and establish persistence.",
+          "executions": [
+            {
+              "containerId": "d66184d1-ff94-47cc-a6b2-7941e9a9cc48",
+              "script": "/scripts/workstation/WindFarm-workstation/phase3_Atk-lateral_movement.sh",
+              "args": null
+            }
+          ]
+        },
+        {
+          "id": "2412940d-6055-43b8-82a6-e7bb42737c57",
+          "name": "OT Reconnaissance",
+          "description": "The attacker uses the OT jumpbox to carry out reconnaissance on the OT network.",
+          "executions": [
+            {
+              "containerId": "d66184d1-ff94-47cc-a6b2-7941e9a9cc48",
+              "script": "/scripts/workstation/WindFarm-workstation/phase4_Atk-OT_Recon.sh",
+              "args": null
+            }
+          ]
+        },
+        {
+          "id": "d78e1fea-8ed6-4af3-bb42-05056791cc0a",
+          "name": "Final Attack",
+          "description": "The attacker sends a malicious scrip to the OT jumpbox, they execute it, deleting the HMI and PLC and defacing their interfaces.",
+          "executions": [
+            {
+              "containerId": "d66184d1-ff94-47cc-a6b2-7941e9a9cc48",
+              "script": "/scripts/workstation/WindFarm-workstation/phase5-Final_objective.sh",
+              "args": null
             }
           ]
         }

@@ -32,8 +32,9 @@ import json
 import zmq
 
 #global variables
+# time.sleep(2)
 SCALING_FACTOR = 1000
-with open("/opt/OpenPLC_v3/webserver/core/psm/SIM_NET_ADDR.txt", 'r')as file:
+with open("/opt/OpenPLC_v3/webserver/core/psm/SIM_NET_ADDR.txt", 'r') as file:
     SIM_ADDR = file.read().rstrip()
 # SIM_ADDR = "127.0.0.1:5555"
 context = zmq.Context()
@@ -94,13 +95,12 @@ def update_inputs():
     tsr = float_to_words(sim_data["tsr"])
     gen_torque_real = float_to_words(sim_data["gen_torque_real"])
     gen_speed = float_to_words(sim_data["gen_speed"])
-
+    print("Gen Speed in Regs:",gen_speed, psm.get_var(f"IW12"),psm.get_var(f"IW13"))
     input_data = [wind_speed, pitch_real, generator_power, rotor_speed, tsr, gen_torque_real, gen_speed]
 
     for i in range(0, len(input_data)):
         psm.set_var(f"IW{i*2}",input_data[i][0])
         psm.set_var(f"IW{(i*2)+1}",input_data[i][1])
-    
     
 def update_outputs():
     #place here your code to work on outputs
@@ -130,7 +130,7 @@ def update_outputs():
     socket.send_json(updated_setpoints)
 
     response = socket.recv_json()
-    print(response)
+    print("From SIM: ",response)
     sim_data["rotor_speed"] = response["rotor_speed"]
     sim_data["generator_power"] = response["generator_power"]
     sim_data["pitch_real"] = response["pitch_real"]

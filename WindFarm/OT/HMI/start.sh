@@ -3,7 +3,7 @@
 /ScadaBR_Installer/scadabr.sh start &
 /usr/sbin/sshd &
 
-sleep 2
+sleep 3
 
 HMI_URL="127.0.0.1:8080/ScadaBR"
 # HMI_URL=$1
@@ -11,21 +11,22 @@ HMI_USERNAME="admin"
 HMI_PASSWORD="admin"
 COOKIE_JAR="hmi_cookie.txt"
 CONFIG_FILE="/home/WindTurbineHMI.json"
+STARTUP_LOG="/home/start.log"
 
 # Login and get session cookie
-echo "Login..."
+echo "Login..." > $STARTUP_LOG
 curl -c "$COOKIE_JAR" \
      -X POST "$HMI_URL/login.htm" \
-     -d "username=$HMI_USERNAME&password=$HMI_PASSWORD"
+     -d "username=$HMI_USERNAME&password=$HMI_PASSWORD" >> $STARTUP_LOG
 
 # Get scriptSessionId Token
-echo "Get DWR session token..."
+echo "Get DWR session token..." >> $STARTUP_LOG
 DWR_ENGINE_RESPONSE=$(curl -b "$COOKIE_JAR" "$HMI_URL/dwr/engine.js")
 DWR_ENGINE_REGEX='dwr\.engine\._origScriptSessionId = "([^"]*)";'
 if [[ "$DWR_ENGINE_RESPONSE" =~ $DWR_ENGINE_REGEX ]]; then
     ORIG_TOKEN="${BASH_REMATCH[1]}"
 else
-    echo "PATTERN not found"
+    echo "PATTERN not found" >> $STARTUP_LOG
 fi
 
 # Append the random suffix to complete DWR scriptSessionId Token
@@ -34,7 +35,7 @@ SCRIPT_SESSION_ID="$ORIG_TOKEN$RAND_SUFFIX"
 
 
 # URL Encode the JSON Config File and push to ScadaBR
-echo "Encode config file and push config to ScadaBR..."
+echo "Encode config file and push config to ScadaBR..." >> $STARTUP_LOG
 ENCODED_JSON=$(python3 -c "
 import json, urllib.parse, sys
 try:
@@ -48,7 +49,7 @@ except Exception as e:
 ")
 
 if [[ $? -ne 0 ]]; then
-    echo "Error: Python falied to process config file: $CONFIG_FILE"
+    echo "Error: Python falied to process config file: $CONFIG_FILE" >> $STARTUP_LOG
     exit 1
 fi
 
@@ -63,6 +64,6 @@ c0-param0=string:$ENCODED_JSON"
 
 curl -b $COOKIE_JAR \
      -X POST "$HMI_URL/dwr/call/plaincall/EmportDwr.importData.dwr" \
-     --data-binary "$PAYLOAD" > /dev/null
+     --data-binary "$PAYLOAD" >> $STARTUP_LOG
 
 tail -f /dev/null

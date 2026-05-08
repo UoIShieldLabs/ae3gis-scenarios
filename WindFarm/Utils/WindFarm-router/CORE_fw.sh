@@ -10,6 +10,7 @@
 
 # CORE_NET:   Core Network
 # ENGR_NET:   Engineering Subnet
+# IT_NET:     IT Subnet
 # OT_DMZ_NET: OT DMZ Network
 
 ############################################
@@ -27,12 +28,14 @@ iptables -A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -s $CORE_NET -d $DB -j DROP
 
 # Only Engineering can SSH to OT_DMZ
-iptables -A FORWARD ! -s $ENGR_NET -d $OT_DMZ_NET -j DROP
+iptables -A FORWARD -s $ENGR_NET -d $OT_DMZ_NET -j ACCEPT
 
 # Web -> DB (allow exceptions BEFORE deny)
 for HOST in $WEB_1 $WEB_2; do
     iptables -A FORWARD -s $HOST -d $DB -p tcp --dport 3306 -j ACCEPT
 done
+
+iptables -A FORWARD ! -s $IT_NET -d $CORE_NET -p tcp --dport 22 -j DROP
 
 # Allow internal traffic
 iptables -A FORWARD -s $CORE_NET -j ACCEPT

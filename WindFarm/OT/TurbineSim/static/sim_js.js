@@ -29,12 +29,23 @@ async function upload(){
 
 async function generatePlot(){
   let r = await fetch(`/api/plot_sim?time=${new Date().getTime()}`)
-  document.getElementById("plot_image").src=r
+  let blob = await r.blob();
+  // document.getElementById("plot_image").src=r
+  document.getElementById("plot_image").src = URL.createObjectURL(blob);
   document.getElementById("download_btn").disabled=false
 }
 
 function downloadPlot(){
-  window.location="/download_plot"
+  // window.location="/download_plot"
+  const a = document.createElement('a');
+  
+  // Use a relative path (no leading slash) to respect the proxy URL
+  a.href = 'download_plot'; 
+  
+  // Trigger the download without navigating the window
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 

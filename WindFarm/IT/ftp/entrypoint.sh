@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # Start SSH
 echo "[entrypoint] Starting SSH server..."
@@ -13,3 +12,5 @@ chown admin:admin /home/admin/uploads
 # Start vsftpd in foreground
 echo "[entrypoint] Starting vsftpd..."
 exec vsftpd /etc/vsftpd.conf
+
+echo $(cat /var/log/vsftpd.log)

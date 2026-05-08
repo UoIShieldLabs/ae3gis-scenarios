@@ -11,3 +11,7 @@ SQL_ADD_SCRIPT_PROG="INSERT INTO Programs (Name, Description, File, Date_upload)
 
 sqlite3 /opt/OpenPLC_v3/webserver/openplc.db "$SQL_ADD_SCRIPT_PROG"
 
+SQL_AUTO_START="UPDATE Settings SET Value = 'true' WHERE Key = 'Start_run_mode';"
+
+sqlite3 /opt/OpenPLC_v3/webserver/openplc.db "$SQL_AUTO_START"
+
